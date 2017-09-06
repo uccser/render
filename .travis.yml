@@ -15,9 +15,9 @@ install:
 jobs:
   include:
     - stage: test
-      script: ./csu dev test_with_coverage
-    - script: ./csu dev style
-    - script: ./csu dev docs
+      script: ./render ci test_with_coverage
+    - script: ./render ci style
+    - script: ./render ci docs
 notifications:
   email: false
   slack:

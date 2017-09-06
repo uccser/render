@@ -135,16 +135,6 @@ dev_test_coverage_upload() {
 }
 defhelp -dev test_coverage_upload 'Upload coverage report to codecov.'
 
-dev_test_with_coverage() {
-  dev_test_suite
-  test_status=$?
-  dev_test_coverage
-  coverage_status=$?
-  dev_test_coverage_upload
-  ! (( $test_status || $coverage_status ))
-}
-defhelp -dev test_with_coverage 'Combine test suit, coverage and upload.'
-
 # Delete all untagged dangling Docker images
 cmd_clean() {
   echo "If the following commands return an argument not found error,"
@@ -175,8 +165,44 @@ cmd_logs() {
 }
 defhelp logs 'View logs.'
 
+ci_test_with_coverage() {
+  dev_test_suite
+  test_status=$?
+  dev_test_coverage
+  coverage_status=$?
+  dev_test_coverage_upload
+  ! (( $test_status || $coverage_status ))
+}
+
+ci_style() {
+  dev_style
+}
+
+ci_docs() {
+  dev_docs
+}
+
 silent() {
   "$@" > /dev/null 2>&1
+}
+
+cmd_ci() {
+  cmd_start
+  local cmd="$1"
+  shift
+  if [ -z "$cmd" ]; then
+    echo -e "${RED}ERROR: ci command requires one parameter!${NC}"
+    cmd_help
+    exit 1
+  fi
+  if silent type "ci_$cmd"; then
+    "ci_$cmd" "$@"
+    exit $?
+  else
+    echo -e "${RED}ERROR: Unknown command!${NC}"
+    echo "Type './csu help' for available commands."
+    return 1
+  fi
 }
 
 cmd_dev() {
