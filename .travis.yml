@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+env:
+  - DOCKER_COMPOSE_VERSION=1.11.2
+language: python
+python:
+  - '3.6'
+before_install:
+  # See https://github.com/travis-ci/travis-ci/issues/7940
+  - sudo rm -f /etc/boto.cfg
+install:
+  - sudo docker --version
+  - sudo docker-compose --version
+jobs:
+  include:
+    - stage: test
+      script: ./csu dev test_with_coverage
+    - script: ./csu dev style
+    - script: ./csu dev docs
+notifications:
+  email: false
+  slack:
+    rooms: deptfunstuff:abJKvzApk5SKtcEyAgtswXAv
+    on_success: change
+    on_failure: change
