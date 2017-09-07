@@ -18,8 +18,8 @@ services:
         QUEUE_NAME: render-queue
         API_DISCOVERY_URL: http://queue:5050/api/{api}/{apiVersion}
         STATIC_DIRECTORY: /renderservice/static_mnt
-#    volumes:
-#      - ./csunplugged/staticfiles:/renderservice/static_mnt
+    volumes:
+      - ./static:/renderservice/static_mnt
     ports:
       - "5000:5000"
     depends_on:
