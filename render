@@ -88,34 +88,32 @@ defhelp -dev shell 'Open shell render service.'
 
 # Run style checks
 dev_style() {
-  echo "Not Implemented"
-  # echo "Running PEP8 style checker..."
-  # docker-compose exec render /docker_venv/bin/flake8
-  # pep8_status=$?
-  # echo
-  # echo "Running Python docstring checker..."
-  # docker-compose exec render /docker_venv/bin/pydocstyle --count --explain
-  # pydocstyle_status=$?
-  # ! (( pep8_status || pydocstyle_status ))
+  echo "Running PEP8 style checker..."
+  flake8
+  pep8_status=$?
+  echo
+  echo "Running Python docstring checker..."
+  pydocstyle --count --explain
+  pydocstyle_status=$?
+  ! (( pep8_status || pydocstyle_status ))
 }
 defhelp -dev style 'Run style checks.'
 
 # Generates the documentation (with warnings as errors)
 dev_docs() {
-  echo "Not Implemented"
-  # echo "Removing any existing documentation..."
-  # docker-compose exec render rm -rf /cs-unplugged/docs/build/
-  # docker-compose exec render mkdir /cs-unplugged/docs/build/
-  # echo
-  # echo "Creating documentation..."
-  # docker-compose exec render /docker_venv/bin/sphinx-build -W /cs-unplugged/docs/source/ /cs-unplugged/docs/build/
+  echo "Removing any existing documentation..."
+  rm -rf docs/build/
+  mkdir docs/build/
+  echo
+  echo "Creating documentation..."
+  sphinx-build -W docs/source/ docs/build/
 }
 defhelp -dev docs 'Generate documentation.'
 
 # Run test suite
 dev_test_suite() {
   echo "Running test suite..."
-  docker-compose exec render /docker_venv/bin/coverage run --rcfile=/renderservice/.coveragerc -m render.tests.start_tests -v
+  docker-compose exec render /docker_venv/bin/coverage run --rcfile=.coveragerc -m render.tests.start_tests -v
 }
 defhelp -dev test 'Run test suite with code coverage.'
 
@@ -128,10 +126,9 @@ dev_test_coverage() {
 defhelp -dev test_coverage 'Display code coverage report.'
 
 dev_test_coverage_upload() {
-  echo "Not Implemented"
-  # echo "Uploading test suite coverage..."
-  # docker cp "$(docker-compose ps -q render)":/renderservice/coverage.xml ./coverage.xml
-  # bash <(curl -s https://codecov.io/bash)
+  echo "Uploading test suite coverage..."
+  docker cp "$(docker-compose ps -q render)":/renderservice/coverage.xml ./coverage.xml
+  bash <(curl -s https://codecov.io/bash)
 }
 defhelp -dev test_coverage_upload 'Upload coverage report to codecov.'
 

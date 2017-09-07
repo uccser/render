@@ -12,6 +12,7 @@ before_install:
 install:
   - sudo docker --version
   - sudo docker-compose --version
+  - pip install -r requirements.txt
 jobs:
   include:
     - stage: test

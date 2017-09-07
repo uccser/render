@@ -32,6 +32,7 @@ RUN /docker_venv/bin/pip3 install -r /renderservice/requirements.txt
 # Setup Working Directory
 ADD ./renderservice /renderservice
 WORKDIR /renderservice
+COPY .coveragerc /renderservice/
 
 # Setup User
 RUN useradd -c "RenderService user" -m -d /home/render -s /bin/bash render \
