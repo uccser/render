@@ -119,9 +119,9 @@ def add_digit_values(image, resource_manager, value_type, on, x_coord_start, x_c
             text = "0"
     elif value_type == "lightbulb":
         if on:
-            image_file = "img/topics/col_binary_lightbulb.png"
+            image_file = "img/resources/binary-windows/col_binary_lightbulb.png"
         else:
-            image_file = "img/topics/col_binary_lightbulb_off.png"
+            image_file = "img/resources/binary-windows/col_binary_lightbulb_off.png"
         data = resource_manager.load(image_file)
         lightbulb = Image.open(data)
         (width, height) = lightbulb.size
