@@ -75,6 +75,23 @@ class BinaryCardsSmallResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
+    def test_binary_cards_small_resource_generation_missing_number_bits_parameter(self):
+        combination = {
+            "dot_counts": True,
+            "black_back": True,
+            "paper_size": "a4",
+            "header_text": "",
+            "copies": 1
+        }
+
+        url = self.BASE_URL + self.query_string(combination)
+        task = self.TASK_TEMPLATE.copy()
+        task.update(combination)
+        task["url"] = url
+
+        with self.assertRaises(TaskError):
+            filename, pdf = self.generator.generate_resource_pdf(task)
+
     def test_binary_cards_small_resource_generation_missing_paper_size_parameter(self):
         combination = {
             "number_bits": "4",
