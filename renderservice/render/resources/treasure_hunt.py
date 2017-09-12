@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 from random import sample
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Treasure Hunt resource.
 
     Args:
@@ -12,7 +12,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A Pillow image object.
+        A dictionary or list of dictionaries for each resource page.
     """
     image_path = "img/resources/resource-treasure-hunt.png"
     data = resource_manager.load(image_path)
@@ -35,10 +35,10 @@ def resource_image(task, resource_manager):
         if number_order == "sorted":
             numbers.sort()
 
-        starting_coord_y = 494
+        starting_coord_y = 506
         base_coord_y = starting_coord_y
-        coord_y_increment = 286
-        base_coords_x = [257, 692]
+        coord_y_increment = 199
+        base_coords_x = [390, 700]
         for i in range(0, total_numbers):
             text = str(numbers[i])
             text_width, text_height = draw.textsize(text, font=font)
@@ -57,10 +57,10 @@ def resource_image(task, resource_manager):
 
         # Add number order and range text
         text = subtitle(task)
-        font = ImageFont.truetype(local_font_path, 110)
+        font = ImageFont.truetype(local_font_path, 75)
         text_width, text_height = draw.textsize(text, font=font)
-        coord_x = 1472 - (text_width / 2)
-        coord_y = 35 - (text_height / 2)
+        coord_x = 1220 - (text_width / 2)
+        coord_y = 520 - (text_height / 2)
         draw.text(
             (coord_x, coord_y),
             text,
@@ -68,7 +68,7 @@ def resource_image(task, resource_manager):
             fill="#000"
         )
 
-    return image
+    return {"type": "image", "data": image}
 
 
 def subtitle(task):

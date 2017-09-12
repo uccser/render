@@ -3,7 +3,7 @@
 from PIL import Image, ImageDraw
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Job Badges resource.
 
     Args:
@@ -11,13 +11,13 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects.
+        A dictionary or list of dictionaries for each resource page.
     """
     image_path = "img/resources/job-badges/job-badges.png"
     data = resource_manager.load(image_path)
     image = Image.open(data)
     ImageDraw.Draw(image)
-    return image
+    return {"type": "image", "data": image}
 
 
 def subtitle(task):

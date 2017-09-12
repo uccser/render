@@ -4,7 +4,7 @@ import os.path
 from PIL import Image, ImageDraw, ImageFont
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Binary Cards resource.
 
     Args:
@@ -12,7 +12,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects (list).
+        A dictionary or list of dictionaries for each resource page.
     """
     BASE_IMAGE_PATH = "img/resources/binary-cards/"
     IMAGE_SIZE_X = 2480
@@ -40,8 +40,7 @@ def resource_image(task, resource_manager):
         BASE_COORD_Y = IMAGE_SIZE_Y - 100
         IMAGE_SIZE_Y = IMAGE_SIZE_Y + 300
 
-    images = []
-
+    pages = []
     for (image_path, number) in IMAGE_DATA:
         data = resource_manager.load(os.path.join(BASE_IMAGE_PATH, image_path))
         image = Image.open(data)
@@ -60,13 +59,13 @@ def resource_image(task, resource_manager):
                 fill="#000"
             )
             image = background
-        images.append(image)
+        pages.append({"type": "image", "data": image})
 
         if black_back:
             black_card = Image.new("1", (IMAGE_SIZE_X, IMAGE_SIZE_Y))
-            images.append(black_card)
+            pages.append({"type": "image", "data": black_card})
 
-    return images
+    return pages
 
 
 def subtitle(task):

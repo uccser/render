@@ -3,21 +3,21 @@
 from PIL import Image, ImageDraw
 
 
-def resource_image(task, resource_manager):
-    """Create a image for Arrows resource.
+def resource(task, resource_manager):
+    """Create a copy of the Arrows resource.
 
     Args:
         task: Dicitionary of requested document options.
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects.
+        A dictionary or list of dicitonaries for each resource page.
     """
     image_path = "img/resources/arrows/arrows.png"
     data = resource_manager.load(image_path)
     image = Image.open(data)
     ImageDraw.Draw(image)
-    return image
+    return {"type": "image", "data": image}
 
 
 def subtitle(task):

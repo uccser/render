@@ -4,7 +4,7 @@ from random import sample
 from PIL import Image, ImageDraw, ImageFont
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Sorting Network Cards resource.
 
     Args:
@@ -12,7 +12,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects (list).
+        A dictionary or list of dictionaries for each resource page.
     """
     IMAGE_SIZE_X = 2000
     IMAGE_SIZE_Y = 3000
@@ -73,7 +73,7 @@ def resource_image(task, resource_manager):
     ]
 
     # Add text to cards
-    images = []
+    pages = []
     for (text_number, text_string) in enumerate(text):
         if text_number % 2 == 0:
             page = card_outlines.copy()
@@ -93,10 +93,9 @@ def resource_image(task, resource_manager):
         )
         # If text on second card but not last page
         if text_number % 2 == 1 and text_number != len(text) - 1:
-            images.append(page)
-    images.append(page)
-
-    return images
+            pages.append({"type": "image", "data": page})
+    pages.append({"type": "image", "data": page})
+    return pages
 
 
 def subtitle(task):

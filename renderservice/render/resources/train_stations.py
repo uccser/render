@@ -3,7 +3,7 @@
 from PIL import Image
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Train Stations resource.
 
     Args:
@@ -11,14 +11,14 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects.
+        A dictionary or list of dictionaries for each resource page.
     """
     image_path = "img/resources/train-stations/train-stations-tracks-{}.png"
     track_type = task["tracks"]
     data = resource_manager.load(image_path.format(track_type))
     image = Image.open(data)
     image = image.rotate(90, expand=True)
-    return image
+    return {"type": "image", "data": image}
 
 
 def subtitle(task):

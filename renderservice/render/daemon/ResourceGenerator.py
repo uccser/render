@@ -88,9 +88,9 @@ class ResourceGenerator(object):
         if task.get("url", None) is None:
             raise TaskError("Task must specify the url.")
 
-        resource_image_generator = self.import_resource_module(task["resource_view"])
+        resource_generator = self.import_resource_module(task["resource_view"])
 
-        for option, values in resource_image_generator.valid_options().items():
+        for option, values in resource_generator.valid_options().items():
             if option not in task.keys():
                 raise TaskError("Task is missing value for {}.".format(option))
             if task[option] not in values:
@@ -105,10 +105,10 @@ class ResourceGenerator(object):
         context["resource_images"] = []
         for copy in range(0, task["copies"]):
             context["resource_images"].append(
-                self.generate_resource_image(task, resource_image_generator)
+                self.generate_resource(task, resource_generator)
             )
 
-        filename = "{} ({}).pdf".format(task["resource_name"], resource_image_generator.subtitle(task))
+        filename = "{} ({}).pdf".format(task["resource_name"], resource_generator.subtitle(task))
         context["filename"] = filename
 
         template_filename = task.get("template", "base-resource-pdf.html")
@@ -122,8 +122,8 @@ class ResourceGenerator(object):
         base_css = CSS(string=css_string)
         return filename, html.write_pdf(stylesheets=[base_css])
 
-    def generate_resource_image(self, task, resource_image_generator):
-        """Retrieve image(s) for one copy of resource from resource generator.
+    def generate_resource(self, task, resource_generator):
+        """Retrieve page(s) for one copy of resource from resource generator.
 
         Images are resized to size.
 
@@ -135,9 +135,9 @@ class ResourceGenerator(object):
             List of Base64 strings of a generated resource images for one copy.
         """
         # Get images from resource image creator
-        raw_images = resource_image_generator.resource_image(task, self.file_manager)
-        if not isinstance(raw_images, list):
-            raw_images = [raw_images]
+        data = resource_generator.resource(task, self.file_manager)
+        if not isinstance(data, list):
+            data = [data]
 
         # Resize images to reduce file size
         max_pixel_height = 0
@@ -148,20 +148,21 @@ class ResourceGenerator(object):
         else:
             raise TaskError("Unsupported paper size: {}.".format(task["paper_size"]))
 
-        images = []
-        for image in raw_images:
-            width, height = image.size
-            if height > max_pixel_height:
-                ratio = max_pixel_height / height
-                width *= ratio
-                height *= ratio
-                image = image.resize((int(width), int(height)), Image.ANTIALIAS)
+        for index in range(len(data)):
+            if data[index]["type"] == "image":
+                image = data[index]["data"]
+                width, height = image.size
+                if height > max_pixel_height:
+                    ratio = max_pixel_height / height
+                    width *= ratio
+                    height *= ratio
+                    image = image.resize((int(width), int(height)), Image.ANTIALIAS)
 
-            # Save image to buffer
-            image_buffer = BytesIO()
-            image.save(image_buffer, format="PNG")
+                # Save image to buffer
+                image_buffer = BytesIO()
+                image.save(image_buffer, format="PNG")
 
-            # Add base64 of image to list of images
-            images.append(standard_b64encode(image_buffer.getvalue()).decode())
+                # Add base64 of image to list of images
+                data[index]["data"] = standard_b64encode(image_buffer.getvalue()).decode()
 
-        return images
+        return data

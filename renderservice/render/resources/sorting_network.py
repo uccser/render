@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 from random import sample
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Sorting Network resource.
 
     Args:
@@ -12,7 +12,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A Pillow image object.
+        A dictionary or list of dictionaries for each resource page.
     """
     image_path = "img/resources/resource-sorting-network-colour.png"
     data = resource_manager.load(image_path)
@@ -45,7 +45,7 @@ def resource_image(task, resource_manager):
             )
             base_coord_x += coord_x_increment
 
-    return image
+    return {"type": "image", "data": image}
 
 
 def subtitle(task):

@@ -3,7 +3,7 @@
 from PIL import Image, ImageDraw, ImageFont
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Binary to Alphabet resource.
 
     Args:
@@ -11,7 +11,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A Pillow image object.
+        A dictionary or list of dictionaries for each resource page.
     """
     # Retrieve relevant image
     worksheet_version = task["worksheet_version"]
@@ -79,7 +79,7 @@ def resource_image(task, resource_manager):
             base_coord_y += 54
 
     image = image.rotate(90, expand=True)
-    return image
+    return {"type": "image", "data": image}
 
 
 def subtitle(task):

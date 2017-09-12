@@ -4,7 +4,7 @@ import os.path
 from PIL import Image, ImageDraw, ImageFont
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Binary Windows resource.
 
     Args:
@@ -12,7 +12,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects (list).
+        A dictionary or list of dictionaries for each resource page.
     """
     BASE_IMAGE_PATH = "img/resources/binary-windows/"
     FONT_PATH = "fonts/PatrickHand-Regular.ttf"
@@ -26,7 +26,7 @@ def resource_image(task, resource_manager):
     value_type = task["value_type"]
     dot_counts = task["dot_counts"]
 
-    images = []
+    pages = []
     page_sets = [("binary-windows-1-to-8.png", 8)]
     if number_of_bits == "8":
         page_sets.append(("binary-windows-16-to-128.png", 128))
@@ -38,10 +38,10 @@ def resource_image(task, resource_manager):
         if dot_counts:
             image = add_dot_counts(image, dot_count_start, small_font)
         image = image.rotate(90, expand=True)
-        images.append(image)
-        images.append(back_page(BASE_IMAGE_PATH, resource_manager, font, value_type))
+        pages.append({"type": "image", "data": image})
+        pages.append(back_page(BASE_IMAGE_PATH, resource_manager, font, value_type))
 
-    return images
+    return pages
 
 
 def back_page(base_image_path, resource_manager, font, value_type):
@@ -59,7 +59,7 @@ def back_page(base_image_path, resource_manager, font, value_type):
     image = Image.open(data)
     image = add_digit_values(image, resource_manager, value_type, False, 660, 724, 650, font)
     image = image.rotate(90, expand=True)
-    return image
+    return {"type": "image", "data": image}
 
 
 def add_dot_counts(image, starting_value, font):

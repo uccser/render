@@ -3,7 +3,7 @@
 from PIL import Image, ImageDraw
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Parity Cards resource.
 
     Args:
@@ -11,7 +11,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects (list).
+        A dictionary or list of dictionaries for each resource page.
     """
     CARDS_COLUMNS = 4
     CARDS_ROWS = 5
@@ -44,9 +44,18 @@ def resource_image(task, resource_manager):
     else:
         back_colour_hex = "#cc0423"
 
-    back_page = Image.new("RGB", (IMAGE_SIZE_X, IMAGE_SIZE_Y), back_colour_hex)
+    pages = [
+        {
+            "type": "image",
+            "data": front_page
+        },
+        {
+            "type": "image",
+            "data": Image.new("RGB", (IMAGE_SIZE_X, IMAGE_SIZE_Y), back_colour_hex)
+        }
+    ]
 
-    return [front_page, back_page]
+    return pages
 
 
 def subtitle(task):

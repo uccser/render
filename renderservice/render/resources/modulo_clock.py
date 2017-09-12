@@ -4,7 +4,7 @@ from math import pi, sin, cos
 from PIL import Image, ImageDraw, ImageFont
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Modulo Clock resource.
 
     Args:
@@ -12,7 +12,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects (list).
+        A dictionary or list of dictionaries for each resource page.
     """
     image_path = "img/resources/modulo-clock/modulo-clock-{}.png"
 
@@ -47,7 +47,7 @@ def resource_image(task, resource_manager):
             fill="#000"
         )
 
-    return image
+    return {"type": "image", "data": image}
 
 
 def subtitle(task):

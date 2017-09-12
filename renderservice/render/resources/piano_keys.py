@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw
 from render.resources.utils import bool_to_yes_no_or_pass_thru
 
 
-def resource_image(task, resource_manager):
+def resource(task, resource_manager):
     """Create a image for Piano Keys resource.
 
     Args:
@@ -12,7 +12,7 @@ def resource_image(task, resource_manager):
         resource_manager: File loader for external resources.
 
     Returns:
-        A list of Pillow image objects (list of Image objects).
+        A dictionary or list of dictionaries for each resource page.
     """
     KEY_DATA = {
         "A": {
@@ -79,7 +79,7 @@ def resource_image(task, resource_manager):
     page.paste(image, mask=image)
 
     page = page.rotate(90, expand=True)
-    return [page]
+    return {"type": "image", "data": page}
 
 
 def highlight_key_areas(image, key_data):
