@@ -24,7 +24,7 @@ class DaemonUtilsTest(BaseTest):
                              stderr=subprocess.DEVNULL)
 
         cls.returncode = None
-        for _ in range(10):
+        for _ in range(20):
             try:
                 cls.returncode = p.wait(1)
             except subprocess.TimeoutExpired:
@@ -32,7 +32,7 @@ class DaemonUtilsTest(BaseTest):
 
         if cls.returncode is None:
             p.terminate()
-            p.wait(1)
+            p.wait()
 
     @classmethod
     def tearDownClass(cls):
@@ -45,7 +45,7 @@ class DaemonUtilsTest(BaseTest):
                              stderr=subprocess.DEVNULL)
 
         returncode = None
-        for _ in range(10):
+        for _ in range(20):
             try:
                 returncode = p.wait(1)
             except subprocess.TimeoutExpired:
@@ -56,7 +56,7 @@ class DaemonUtilsTest(BaseTest):
 
         if returncode is None:
             p.terminate()
-            p.wait(1)
+            p.wait()
 
     def test_get_active_daemon_details(self):
         self.assertEqual(self.returncode, 0)
