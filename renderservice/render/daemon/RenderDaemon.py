@@ -69,7 +69,7 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
         for task_descriptor in tasks:
             task_id = task_descriptor["id"]
             retries = task_descriptor["retry_count"]
-            timeout_seconds = TASK_SECONDS + TASK_SECONDS * TASK_TIME_MULT * retries
+            timeout_seconds = int(TASK_SECONDS + TASK_SECONDS * TASK_TIME_MULT * retries)
 
             result = None
             if retries < TASK_RETRY_LIMIT:
@@ -78,7 +78,9 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
                 try:
                     result = self.process_task(task_descriptor)
                 except Exception as e:
-                    logger.exception("Task {} raise exception with error: {}", task_descriptor["id"], e)
+                    logger.exception("Task {} raised exception with error: {}".format(task_descriptor["id"], e))
+                finally:
+                    signal.alarm(0)
             else:
                 result = self.handle_retry_limit(task_descriptor)
 
@@ -92,7 +94,7 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
             # Save out documents
             if result is not None and result["kind"] == "result#document":
                 data = pickle.dumps(result)
-                self.resource_manager.save(internal_filename, data)
+                self.file_manager.save(internal_filename, data)
 
     def process_task(self, task_descriptor):
         """Process the given task and get result.
@@ -119,6 +121,7 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
             }
         else:
             raise Exception("Unrecognized task: {}.".format(task_kind))
+
         return result
 
     def handle_retry_limit(self, task_descriptor):

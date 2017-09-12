@@ -554,7 +554,7 @@ def lease_api(project=None, taskqueue=None):
                 tasks.append(task_json)
 
                 task.retry_count += 1
-                task_string = json.dumps(task_json)
+                task_string = json.dumps(task.to_json())
                 r.set(name=key, value=task_string)
 
             start = end + 1

@@ -3,6 +3,11 @@ Render Service
 
 The render service pipline flows as follows; It accesses an external queue to get a task, consumes the task creating a resource, saves the resource and then repeats this process.
 
+Task Definitions
+==============================================================================
+
+Tasks consumed by the render service must have
+
 Infrastructure
 ==============================================================================
 
@@ -59,4 +64,4 @@ Some important things to note when working with the render service:
 
 - When in local development the render service does not have a live volume of the renderservice directory, that mean any changes require a rebuild of the service to see the changes.
 
-- The render service has multiple directories for static files, a local copy and a mounted external copy. The static folder in the root directory of the repository is mounted as the external copy when run locally. 
+- The render service has multiple directories for static files, a local copy and a mounted external copy. The static folder in the root directory of the repository is mounted as the external copy when run locally.
