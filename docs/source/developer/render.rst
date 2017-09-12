@@ -1,10 +1,12 @@
 Render Service
 ##############################################################################
 
+The render service pipline flows as follows; It accesses an external queue to get a task, consumes the task creating a resource, saves the resource and then repeats this process.
+
 Infrastructure
 ==============================================================================
 
-The render service runs multiple processes on a single unit, this includes multiple daemons that consume tasks from an external queue and produce files, and a webserver that allows from health checks that monitor and restart the render daemons.
+The render service consists of multiple processes on a single unit, this includes multiple daemons that consume tasks from an external queue and produce files, and a webserver that allows from health checks that monitor and restart the render daemons.
 
 Important files:
 
@@ -55,4 +57,6 @@ Important files:
 
 Some important things to note when working with the render service:
 
-- That unlike the django webservice in local development the render service does not have a live volume of the renderservice directory, that mean any changes require a rebuild of the service to see the changes.
+- When in local development the render service does not have a live volume of the renderservice directory, that mean any changes require a rebuild of the service to see the changes.
+
+- The render service has multiple directories for static files, a local copy and a mounted external copy. The static folder in the root directory of the repository is mounted as the external copy when run locally. 

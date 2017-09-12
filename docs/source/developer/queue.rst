@@ -1,6 +1,8 @@
 Queue Service
 ##############################################################################
 
+The queue service is an image that is run during local development only, it provides a rough implementation of the Google TaskQueue RESTful API for access by the render service and external task producers.
+
 Infrastructure
 ==============================================================================
 
