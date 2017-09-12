@@ -28,31 +28,13 @@ def index():
     """Get an index page describing the service."""
     return "CS-Unplugged - Render Engine"
 
-from render.daemon.QueueHandler import QueueHandler
-PROJECT_NAME = os.getenv("PROJECT_NAME", None)
-QUEUE_NAME = os.getenv("QUEUE_NAME", None)
-DISCOVERY_URL = os.getenv("API_DISCOVERY_URL", None)
-@application.route("/add")
-def add():
-    """Test method."""
-    queue = QueueHandler(project_name=PROJECT_NAME, taskqueue_name=QUEUE_NAME, discovery_url=DISCOVERY_URL)
-    queue.create_task({
-        "kind": "task#render",
-        "resource_slug": "treasure-hunt",
-        "resource_name": "Treasure Hunt",
-        "resource_view": "treasure_hunt",
-        "url": "resources/treasure-hunt.html",
-        "prefilled_values": "blank",
-        "number_order": "sorted",
-        "paper_size": "a4",
-        "header_text": "",
-        "copies": 1,
-    })
-    return "", 200
 
 @application.route("/version")
 def version():
+    """Get the version of the service."""
     return __version__, 200
+
+
 @application.errorhandler(500)
 def server_error(e):
     """Log and reports back information about internal errors."""
