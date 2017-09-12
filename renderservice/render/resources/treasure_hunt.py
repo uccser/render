@@ -14,20 +14,30 @@ def resource(task, resource_manager):
     Returns:
         A dictionary or list of dictionaries for each resource page.
     """
-    image_path = "img/resources/resource-treasure-hunt.png"
-    data = resource_manager.load(image_path)
-    image = Image.open(data)
-    draw = ImageDraw.Draw(image)
-
-    font_path = "fonts/PatrickHand-Regular.ttf"
-    local_font_path = resource_manager.get_path(font_path)
+    pages = []
+    IMAGE_PATH = "img/resources/treasure-hunt/{}.png"
+    FONT_PATH = "fonts/PatrickHand-Regular.ttf"
+    local_font_path = resource_manager.get_path(FONT_PATH)
 
     # Add numbers to image if required
     prefilled_values = task["prefilled_values"]
     number_order = task["number_order"]
+    instructions = task["instructions"]
+    art_style = task["art"]
 
+    if instructions:
+        data = resource_manager.load(IMAGE_PATH.format("instructions"))
+        image = Image.open(data)
+        ImageDraw.Draw(image)
+        pages.append({"type": "image", "data": image})
+
+    data = resource_manager.load(IMAGE_PATH.format(art_style))
+    image = Image.open(data)
+    draw = ImageDraw.Draw(image)
+
+    # Add numbers to image if required
     if prefilled_values != "blank":
-        (range_min, range_max, font_size) = number_range(task)
+        (range_min, range_max, font_size) = number_range(request)
         font = ImageFont.truetype(local_font_path, font_size)
 
         total_numbers = 26
@@ -35,8 +45,7 @@ def resource(task, resource_manager):
         if number_order == "sorted":
             numbers.sort()
 
-        starting_coord_y = 506
-        base_coord_y = starting_coord_y
+        base_coord_y = 506
         coord_y_increment = 199
         base_coords_x = [390, 700]
         for i in range(0, total_numbers):
@@ -55,8 +64,7 @@ def resource(task, resource_manager):
                 fill="#000"
             )
 
-        # Add number order and range text
-        text = subtitle(task)
+        text = "{} - {} to {}".format(number_order.title(), range_min, range_max - 1)
         font = ImageFont.truetype(local_font_path, 75)
         text_width, text_height = draw.textsize(text, font=font)
         coord_x = 1220 - (text_width / 2)
@@ -65,10 +73,11 @@ def resource(task, resource_manager):
             (coord_x, coord_y),
             text,
             font=font,
-            fill="#000"
+            fill="#000",
         )
+    pages.append({"type": "image", "data": image})
 
-    return {"type": "image", "data": image}
+    return pages
 
 
 def subtitle(task):
@@ -83,15 +92,29 @@ def subtitle(task):
     Returns:
         text for subtitle (str)
     """
-    prefilled_values = task["prefilled_values"]
+    art_style = task["art"]
+    instructions = task["instructions"]
+    paper_size = task["paper_size"]
+
     if prefilled_values == "blank":
-        text = "blank"
+        range_text = "blank"
     else:
         SUBTITLE_TEMPLATE = "{} - {} to {}"
         number_order_text = task["number_order"].title()
-        range_min, range_max, font_size = number_range(task)
-        text = SUBTITLE_TEMPLATE.format(number_order_text, range_min, range_max - 1)
-    return "{} - {}".format(text, task["paper_size"])
+        range_min, range_max, font_size = number_range(request)
+        range_text = SUBTITLE_TEMPLATE.format(number_order_text, range_min, range_max - 1)
+
+    if art_style == "colour":
+        art_style_text = "full colour"
+    else:
+        art_style_text = "black and white"
+
+    if instructions:
+        instructions_text = "with instructions"
+    else:
+        instructions_text = "without instructions"
+
+    return "{} - {} - {} - {}".format(range_text, art_style_text, instructions_text, paper_size)
 
 
 def number_range(task):
@@ -107,13 +130,13 @@ def number_range(task):
     range_min = 0
     if prefilled_values == "easy":
         range_max = 100
-        font_size = 97
+        font_size = 55
     elif prefilled_values == "medium":
         range_max = 1000
-        font_size = 80
+        font_size = 50
     elif prefilled_values == "hard":
         range_max = 10000
-        font_size = 70
+        font_size = 45
     return (range_min, range_max, font_size)
 
 
@@ -128,5 +151,7 @@ def valid_options():
     return {
         "prefilled_values": ["blank", "easy", "medium", "hard"],
         "number_order": ["sorted", "unsorted"],
+        "instructions": [True, False],
+        "art": ["colour", "bw"],
         "paper_size": ["a4", "letter"],
     }

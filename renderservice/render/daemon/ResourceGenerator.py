@@ -16,7 +16,7 @@ TEMPLATE_DIRECTORY = os.getenv("TEMPLATE_DIRECTORY", "/renderservice/templates")
 logger = logging.getLogger(__name__)
 
 # File Generation and Processing Constants
-MM_TO_PIXEL_RATIO = 3.78
+MM_TO_PIXEL_RATIO = 6
 A4_MM_SCALE = 267
 LETTER_MM_SCALE = 249
 

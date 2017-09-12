@@ -8,6 +8,7 @@ jinja2==2.9.6
 Pillow==4.1.1
 urllib3[secure]==1.21.1
 httplib2shim==0.0.2
+yattag==1.9.0
 
 # Testing
 coverage==4.4.1
