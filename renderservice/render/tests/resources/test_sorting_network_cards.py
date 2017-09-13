@@ -1,22 +1,22 @@
 import itertools
 from render.daemon.ResourceGenerator import TaskError
-from render.tests.BaseResourceTest import BaseResourceTest
+from render.tests.resources.BaseResourceTest import BaseResourceTest
 
 
-class LeftRightCardsResourceTest(BaseResourceTest):
+class SortingNetworkCardsResourceTest(BaseResourceTest):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.module = "left_right_cards"
-        self.BASE_URL = "resources/left-right-cards.html"
+        self.module = "sorting_network_cards"
+        self.BASE_URL = "resources/sorting-network-cards.html"
         self.TASK_TEMPLATE = {
-            "resource_slug": "left-right-cards",
-            "resource_name": "Left and Right Cards",
-            "resource_view": "left_right_cards",
+            "resource_slug": "sorting-network-cards",
+            "resource_name": "Sorting Network Cards",
+            "resource_view": "sorting_network_cards",
             "url": None
         }
 
-    def test_left_right_cards_resource_generation_valid_configurations(self):
+    def test_sorting_network_cards_resource_generation_valid_configurations(self):
         resource_module = self.load_module()
         valid_options = resource_module.valid_options()
         valid_options["header_text"] = ["", "Example header"]
@@ -30,7 +30,7 @@ class LeftRightCardsResourceTest(BaseResourceTest):
         ]
 
         print()
-        print("Testing Left and Right Cards:")
+        print("Testing Sorting Network Cards:")
         for combination in combinations:
             print("   - Testing combination: {} ... ".format(combination), end="")
             url = self.BASE_URL + self.query_string(combination)
@@ -41,9 +41,10 @@ class LeftRightCardsResourceTest(BaseResourceTest):
             filename, pdf = self.generator.generate_resource_pdf(task)
             print("ok")
 
-    def test_left_right_cards_resource_generation_missing_paper_size_parameter(self):
+    def test_sorting_network_cards_resource_generation_missing_type_parameter(self):
         combination = {
-            "header_text": "Example header text",
+            "paper_size": "a4",
+            "header_text": "",
             "copies": 1
         }
 
@@ -55,9 +56,25 @@ class LeftRightCardsResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_left_right_cards_resource_generation_missing_header_text_parameter(self):
-        expected_filename = "Left and Right Cards (a4).pdf"
+    def test_sorting_network_cards_resource_generation_missing_paper_size_parameter(self):
         combination = {
+            "type": "small_numbers",
+            "header_text": "",
+            "copies": 1
+        }
+
+        url = self.BASE_URL + self.query_string(combination)
+        task = self.TASK_TEMPLATE.copy()
+        task.update(combination)
+        task["url"] = url
+
+        with self.assertRaises(TaskError):
+            filename, pdf = self.generator.generate_resource_pdf(task)
+
+    def test_sorting_network_cards_resource_generation_missing_header_text_parameter(self):
+        expected_filename = "Sorting Network Cards (small numbers - a4).pdf"
+        combination = {
+            "type": "small_numbers",
             "paper_size": "a4",
             "copies": 1
         }

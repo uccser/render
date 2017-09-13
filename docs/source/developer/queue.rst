@@ -3,6 +3,8 @@ Queue Service
 
 The queue service is an image that is run during local development only, it provides a rough implementation of the Google TaskQueue RESTful API for access by the render service and external task producers.
 
+This should disappear with `Task Queue v2 <https://cloud.google.com/appengine/docs/standard/python/taskqueue/rest/migrating-from-restapi-v1>`_ assuming there is a good way to run it locally. 
+
 Infrastructure
 ==============================================================================
 

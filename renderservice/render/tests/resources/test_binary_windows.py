@@ -1,22 +1,22 @@
 import itertools
 from render.daemon.ResourceGenerator import TaskError
-from render.tests.BaseResourceTest import BaseResourceTest
+from render.tests.resources.BaseResourceTest import BaseResourceTest
 
 
-class TreasureHuntResourceTest(BaseResourceTest):
+class BinaryWindowsResourceTest(BaseResourceTest):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.module = "treasure_hunt"
-        self.BASE_URL = "resources/treasure-hunt.html"
+        self.module = "binary_windows"
+        self.BASE_URL = "resources/binary-windows.html"
         self.TASK_TEMPLATE = {
-            "resource_slug": "treasure-hunt",
-            "resource_name": "Treasure Hunt",
-            "resource_view": "treasure_hunt",
+            "resource_slug": "binary-windows",
+            "resource_name": "Binary Windows",
+            "resource_view": "binary_windows",
             "url": None
         }
 
-    def test_treasure_hunt_resource_generation_valid_configurations(self):
+    def test_binary_windows_resource_generation_valid_configurations(self):
         resource_module = self.load_module()
         valid_options = resource_module.valid_options()
         valid_options["header_text"] = ["", "Example header"]
@@ -30,7 +30,7 @@ class TreasureHuntResourceTest(BaseResourceTest):
         ]
 
         print()
-        print("Testing Treasure Hunt:")
+        print("Testing Binary Windows:")
         for combination in combinations:
             print("   - Testing combination: {} ... ".format(combination), end="")
             url = self.BASE_URL + self.query_string(combination)
@@ -41,11 +41,12 @@ class TreasureHuntResourceTest(BaseResourceTest):
             filename, pdf = self.generator.generate_resource_pdf(task)
             print("ok")
 
-    def test_treasure_hunt_resource_generation_missing_prefilled_values_parameter(self):
+    def test_binary_windows_resource_generation_missing_dot_count_parameter(self):
         combination = {
-            "number_order": "sorted",
+            "number_bits": "8",
+            "value_type": "binary",
             "paper_size": "a4",
-            "header_text": "",
+            "header_text": "Example header text",
             "copies": 1
         }
 
@@ -57,11 +58,12 @@ class TreasureHuntResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_treasure_hunt_resource_generation_missing_number_order_parameter(self):
+    def test_binary_windows_resource_generation_missing_number_bits_parameter(self):
         combination = {
-            "prefilled_values": "blank",
+            "dot_counts": True,
+            "value_type": "binary",
             "paper_size": "a4",
-            "header_text": "",
+            "header_text": "Example header text",
             "copies": 1
         }
 
@@ -73,11 +75,12 @@ class TreasureHuntResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_treasure_hunt_resource_generation_missing_paper_size_parameter(self):
+    def test_binary_windows_resource_generation_missing_value_type_parameter(self):
         combination = {
-            "prefilled_values": "blank",
-            "number_order": "sorted",
-            "header_text": "",
+            "dot_counts": True,
+            "number_bits": "8",
+            "paper_size": "a4",
+            "header_text": "Example header text",
             "copies": 1
         }
 
@@ -89,11 +92,29 @@ class TreasureHuntResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_treasure_hunt_generation_missing_header_text_parameter(self):
-        expected_filename = "Treasure Hunt (blank - a4).pdf"
+    def test_binary_windows_resource_generation_missing_paper_size_parameter(self):
         combination = {
-            "prefilled_values": "blank",
-            "number_order": "sorted",
+            "dot_counts": True,
+            "number_bits": "8",
+            "value_type": "binary",
+            "header_text": "Example header text",
+            "copies": 1
+        }
+
+        url = self.BASE_URL + self.query_string(combination)
+        task = self.TASK_TEMPLATE.copy()
+        task.update(combination)
+        task["url"] = url
+
+        with self.assertRaises(TaskError):
+            filename, pdf = self.generator.generate_resource_pdf(task)
+
+    def test_binary_windows_resource_generation_missing_header_text_parameter(self):
+        expected_filename = "Binary Windows (8 bits - lightbulb - with dot counts).pdf"
+        combination = {
+            "dot_counts": True,
+            "number_bits": "8",
+            "value_type": "lightbulb",
             "paper_size": "a4",
             "copies": 1
         }

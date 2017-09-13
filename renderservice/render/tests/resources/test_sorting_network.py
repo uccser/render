@@ -1,22 +1,22 @@
 import itertools
 from render.daemon.ResourceGenerator import TaskError
-from render.tests.BaseResourceTest import BaseResourceTest
+from render.tests.resources.BaseResourceTest import BaseResourceTest
 
 
-class ArrowsResourceTest(BaseResourceTest):
+class SortingNetworkResourceTest(BaseResourceTest):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.module = "arrows"
-        self.BASE_URL = "resources/arrows.html"
+        self.module = "sorting_network"
+        self.BASE_URL = "resources/modulo-clock.html"
         self.TASK_TEMPLATE = {
-            "resource_slug": "arrows",
-            "resource_name": "Arrows",
-            "resource_view": "arrows",
+            "resource_slug": "sorting-network",
+            "resource_name": "Sorting Network",
+            "resource_view": "sorting_network",
             "url": None
         }
 
-    def test_arrows_resource_generation_valid_configurations(self):
+    def test_sorting_network_resource_generation_valid_configurations(self):
         resource_module = self.load_module()
         valid_options = resource_module.valid_options()
         valid_options["header_text"] = ["", "Example header"]
@@ -30,7 +30,7 @@ class ArrowsResourceTest(BaseResourceTest):
         ]
 
         print()
-        print("Testing Arrows:")
+        print("Testing Sorting Network:")
         for combination in combinations:
             print("   - Testing combination: {} ... ".format(combination), end="")
             url = self.BASE_URL + self.query_string(combination)
@@ -41,9 +41,10 @@ class ArrowsResourceTest(BaseResourceTest):
             filename, pdf = self.generator.generate_resource_pdf(task)
             print("ok")
 
-    def test_arrows_resource_generation_missing_paper_size_parameter(self):
+    def test_sorting_network_resource_generation_missing_prefilled_values_parameter(self):
         combination = {
-            "header_text": "Example header text",
+            "paper_size": "a4",
+            "header_text": "",
             "copies": 1
         }
 
@@ -55,9 +56,25 @@ class ArrowsResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_arrows_resource_generation_missing_header_text_parameter(self):
-        expected_filename = "Arrows (a4).pdf"
+    def test_sorting_network_resource_generation_missing_paper_size_parameter(self):
         combination = {
+            "prefilled_values": "blank",
+            "header_text": "",
+            "copies": 1
+        }
+
+        url = self.BASE_URL + self.query_string(combination)
+        task = self.TASK_TEMPLATE.copy()
+        task.update(combination)
+        task["url"] = url
+
+        with self.assertRaises(TaskError):
+            filename, pdf = self.generator.generate_resource_pdf(task)
+
+    def test_sorting_network_generation_missing_header_text_parameter(self):
+        expected_filename = "Sorting Network (blank - a4).pdf"
+        combination = {
+            "prefilled_values": "blank",
             "paper_size": "a4",
             "copies": 1
         }

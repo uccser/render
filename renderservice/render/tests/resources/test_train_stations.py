@@ -1,22 +1,22 @@
 import itertools
 from render.daemon.ResourceGenerator import TaskError
-from render.tests.BaseResourceTest import BaseResourceTest
+from render.tests.resources.BaseResourceTest import BaseResourceTest
 
 
-class JobBadgesResourceTest(BaseResourceTest):
+class TrainStationsResourceTest(BaseResourceTest):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.module = "job_badges"
-        self.BASE_URL = "resources/job-badges.html"
+        self.module = "train_stations"
+        self.BASE_URL = "resources/train-stations.html"
         self.TASK_TEMPLATE = {
-            "resource_slug": "job-badges",
-            "resource_name": "Job Badges",
-            "resource_view": "job_badges",
+            "resource_slug": "train-stations",
+            "resource_name": "Train Stations",
+            "resource_view": "train_stations",
             "url": None
         }
 
-    def test_job_badges_resource_generation_valid_configurations(self):
+    def test_train_stations_resource_generation_valid_configurations(self):
         resource_module = self.load_module()
         valid_options = resource_module.valid_options()
         valid_options["header_text"] = ["", "Example header"]
@@ -30,7 +30,7 @@ class JobBadgesResourceTest(BaseResourceTest):
         ]
 
         print()
-        print("Testing Job Badges:")
+        print("Testing Train Stations:")
         for combination in combinations:
             print("   - Testing combination: {} ... ".format(combination), end="")
             url = self.BASE_URL + self.query_string(combination)
@@ -41,9 +41,10 @@ class JobBadgesResourceTest(BaseResourceTest):
             filename, pdf = self.generator.generate_resource_pdf(task)
             print("ok")
 
-    def test_job_badges_resource_generation_missing_paper_size_parameter(self):
+    def test_train_stations_resource_generation_missing_tracks_parameter(self):
         combination = {
-            "header_text": "Example header text",
+            "paper_size": "a4",
+            "header_text": "",
             "copies": 1
         }
 
@@ -55,9 +56,25 @@ class JobBadgesResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_job_badges_resource_generation_missing_header_text_parameter(self):
-        expected_filename = "Job Badges (a4).pdf"
+    def test_train_stations_resource_generation_missing_paper_size_parameter(self):
         combination = {
+            "tracks": "circular",
+            "header_text": "",
+            "copies": 1
+        }
+
+        url = self.BASE_URL + self.query_string(combination)
+        task = self.TASK_TEMPLATE.copy()
+        task.update(combination)
+        task["url"] = url
+
+        with self.assertRaises(TaskError):
+            filename, pdf = self.generator.generate_resource_pdf(task)
+
+    def test_train_stations_resource_generation_missing_header_text_parameter(self):
+        expected_filename = "Train Stations (circular tracks - a4).pdf"
+        combination = {
+            "tracks": "circular",
             "paper_size": "a4",
             "copies": 1
         }

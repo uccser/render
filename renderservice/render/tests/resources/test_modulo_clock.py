@@ -1,22 +1,22 @@
 import itertools
 from render.daemon.ResourceGenerator import TaskError
-from render.tests.BaseResourceTest import BaseResourceTest
+from render.tests.resources.BaseResourceTest import BaseResourceTest
 
 
-class BinaryCardsResourceTest(BaseResourceTest):
+class ModuloClockResourceTest(BaseResourceTest):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.module = "binary_cards"
-        self.BASE_URL = "resources/binary-cards.html"
+        self.module = "modulo_clock"
+        self.BASE_URL = "resources/modulo-clock.html"
         self.TASK_TEMPLATE = {
-            "resource_slug": "binary-cards",
-            "resource_name": "Binary Cards",
-            "resource_view": "binary_cards",
+            "resource_slug": "modulo-clock",
+            "resource_name": "Modulo Clock",
+            "resource_view": "modulo_clock",
             "url": None
         }
 
-    def test_binary_cards_resource_generation_valid_configurations(self):
+    def test_modulo_clock_resource_generation_valid_configurations(self):
         resource_module = self.load_module()
         valid_options = resource_module.valid_options()
         valid_options["header_text"] = ["", "Example header"]
@@ -30,7 +30,7 @@ class BinaryCardsResourceTest(BaseResourceTest):
         ]
 
         print()
-        print("Testing Binary Cards:")
+        print("Testing Modulo Clock:")
         for combination in combinations:
             print("   - Testing combination: {} ... ".format(combination), end="")
             url = self.BASE_URL + self.query_string(combination)
@@ -41,11 +41,10 @@ class BinaryCardsResourceTest(BaseResourceTest):
             filename, pdf = self.generator.generate_resource_pdf(task)
             print("ok")
 
-    def test_binary_cards_resource_generation_missing_numbers_parameter(self):
+    def test_modulo_clock_resource_generation_missing_modulo_number_parameter(self):
         combination = {
-            "black_back": False,
             "paper_size": "a4",
-            "header_text": "Example header text",
+            "header_text": "",
             "copies": 1
         }
 
@@ -57,11 +56,10 @@ class BinaryCardsResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_binary_cards_resource_generation_missing_back_parameter(self):
+    def test_modulo_clock_resource_generation_missing_paper_size_parameter(self):
         combination = {
-            "display_numbers": True,
-            "paper_size": "a4",
-            "header_text": "Example header text",
+            "modulo_number": "2",
+            "header_text": "",
             "copies": 1
         }
 
@@ -73,27 +71,10 @@ class BinaryCardsResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_binary_cards_resource_generation_missing_paper_size_parameter(self):
+    def test_modulo_clock_resource_generation_missing_header_text_parameter(self):
+        expected_filename = "Modulo Clock (2 - a4).pdf"
         combination = {
-            "display_numbers": True,
-            "black_back": False,
-            "header_text": "Example header text",
-            "copies": 1
-        }
-
-        url = self.BASE_URL + self.query_string(combination)
-        task = self.TASK_TEMPLATE.copy()
-        task.update(combination)
-        task["url"] = url
-
-        with self.assertRaises(TaskError):
-            filename, pdf = self.generator.generate_resource_pdf(task)
-
-    def test_binary_cards_resource_generation_missing_header_text_parameter(self):
-        expected_filename = "Binary Cards (with numbers - without black back - a4).pdf"
-        combination = {
-            "display_numbers": True,
-            "black_back": False,
+            "modulo_number": "2",
             "paper_size": "a4",
             "copies": 1
         }

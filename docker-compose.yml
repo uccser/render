@@ -1,4 +1,4 @@
-version: '3'
+version: "3.2"
 services:
 
   redis:
@@ -28,7 +28,7 @@ services:
   queue:
     build:
       context: .
-      dockerfile: ./queue/Dockerfile-local
+      dockerfile: ./queueservice/Dockerfile-local
       args:
         PROCESS_PORT: 5052
     ports:

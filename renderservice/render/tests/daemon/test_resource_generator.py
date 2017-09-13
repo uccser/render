@@ -1,5 +1,5 @@
 """Test the resource generator for expected failures."""
-from render.tests.BaseResourceTest import BaseResourceTest
+from render.tests.resources.BaseResourceTest import BaseResourceTest
 from render.daemon.ResourceGenerator import ResourceGenerator, TaskError
 
 

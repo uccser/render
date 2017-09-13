@@ -22,7 +22,7 @@ def resource(task, resource_manager):
     X_COORD_DECREMENT = 516
     Y_COORD = 240
     FONT_PATH = "fonts/PatrickHand-Regular.ttf"
-    local_font_path = resource_manager.get_path(font_path)
+    local_font_path = resource_manager.get_path(FONT_PATH)
     font = ImageFont.truetype(local_font_path, 200)
 
     parameter_options = valid_options()

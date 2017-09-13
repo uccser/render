@@ -37,7 +37,7 @@ def resource(task, resource_manager):
 
     # Add numbers to image if required
     if prefilled_values != "blank":
-        (range_min, range_max, font_size) = number_range(request)
+        (range_min, range_max, font_size) = number_range(task)
         font = ImageFont.truetype(local_font_path, font_size)
 
         total_numbers = 26
@@ -92,6 +92,7 @@ def subtitle(task):
     Returns:
         text for subtitle (str)
     """
+    prefilled_values = task["prefilled_values"]
     art_style = task["art"]
     instructions = task["instructions"]
     paper_size = task["paper_size"]
@@ -101,7 +102,7 @@ def subtitle(task):
     else:
         SUBTITLE_TEMPLATE = "{} - {} to {}"
         number_order_text = task["number_order"].title()
-        range_min, range_max, font_size = number_range(request)
+        range_min, range_max, font_size = number_range(task)
         range_text = SUBTITLE_TEMPLATE.format(number_order_text, range_min, range_max - 1)
 
     if art_style == "colour":

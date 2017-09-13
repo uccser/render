@@ -1,22 +1,22 @@
 import itertools
 from render.daemon.ResourceGenerator import TaskError
-from render.tests.BaseResourceTest import BaseResourceTest
+from render.tests.resources.BaseResourceTest import BaseResourceTest
 
 
-class SortingNetworkCardsResourceTest(BaseResourceTest):
+class BarcodeChecksumPosterResourceTest(BaseResourceTest):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.module = "sorting_network_cards"
-        self.BASE_URL = "resources/sorting-network-cards.html"
+        self.module = "barcode_checksum_poster"
+        self.BASE_URL = "resources/barcode-checksum-poster.html"
         self.TASK_TEMPLATE = {
-            "resource_slug": "sorting-network-cards",
-            "resource_name": "Sorting Network Cards",
-            "resource_view": "sorting_network_cards",
+            "resource_slug": "barcode-checksum-poster",
+            "resource_name": "Barcode Checksum Poster",
+            "resource_view": "barcode_checksum_poster",
             "url": None
         }
 
-    def test_sorting_network_cards_resource_generation_valid_configurations(self):
+    def test_barcode_checksum_poster_resource_generation_valid_configurations(self):
         resource_module = self.load_module()
         valid_options = resource_module.valid_options()
         valid_options["header_text"] = ["", "Example header"]
@@ -30,7 +30,7 @@ class SortingNetworkCardsResourceTest(BaseResourceTest):
         ]
 
         print()
-        print("Testing Sorting Network Cards:")
+        print("Testing Barcode Checksum Poster:")
         for combination in combinations:
             print("   - Testing combination: {} ... ".format(combination), end="")
             url = self.BASE_URL + self.query_string(combination)
@@ -41,7 +41,7 @@ class SortingNetworkCardsResourceTest(BaseResourceTest):
             filename, pdf = self.generator.generate_resource_pdf(task)
             print("ok")
 
-    def test_sorting_network_cards_resource_generation_missing_type_parameter(self):
+    def test_barcode_checksum_poster_resource_generation_missing_barcode_length_parameter(self):
         combination = {
             "paper_size": "a4",
             "header_text": "",
@@ -56,9 +56,9 @@ class SortingNetworkCardsResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_sorting_network_cards_resource_generation_missing_paper_size_parameter(self):
+    def test_barcode_checksum_poster_resource_generation_missing_paper_size_parameter(self):
         combination = {
-            "type": "small_numbers",
+            "barcode_length": "12",
             "header_text": "",
             "copies": 1
         }
@@ -71,10 +71,10 @@ class SortingNetworkCardsResourceTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_sorting_network_cards_resource_generation_missing_header_text_parameter(self):
-        expected_filename = "Sorting Network Cards (small numbers - a4).pdf"
+    def test_barcode_checksum_poster_resource_generation_missing_header_text_parameter(self):
+        expected_filename = "Barcode Checksum Poster (12 digits - a4).pdf"
         combination = {
-            "type": "small_numbers",
+            "barcode_length": "12",
             "paper_size": "a4",
             "copies": 1
         }

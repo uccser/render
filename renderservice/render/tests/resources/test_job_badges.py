@@ -1,22 +1,22 @@
 import itertools
 from render.daemon.ResourceGenerator import TaskError
-from render.tests.BaseResourceTest import BaseResourceTest
+from render.tests.resources.BaseResourceTest import BaseResourceTest
 
 
-class GridResourceViewTest(BaseResourceTest):
+class JobBadgesResourceTest(BaseResourceTest):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.module = "grid"
-        self.BASE_URL = "resources/grid.html"
+        self.module = "job_badges"
+        self.BASE_URL = "resources/job-badges.html"
         self.TASK_TEMPLATE = {
-            "resource_slug": "grid",
-            "resource_name": "Grid",
-            "resource_view": "grid",
+            "resource_slug": "job-badges",
+            "resource_name": "Job Badges",
+            "resource_view": "job_badges",
             "url": None
         }
 
-    def test_grid_resource_generation_valid_configurations(self):
+    def test_job_badges_resource_generation_valid_configurations(self):
         resource_module = self.load_module()
         valid_options = resource_module.valid_options()
         valid_options["header_text"] = ["", "Example header"]
@@ -30,7 +30,7 @@ class GridResourceViewTest(BaseResourceTest):
         ]
 
         print()
-        print("Testing Grid:")
+        print("Testing Job Badges:")
         for combination in combinations:
             print("   - Testing combination: {} ... ".format(combination), end="")
             url = self.BASE_URL + self.query_string(combination)
@@ -41,9 +41,9 @@ class GridResourceViewTest(BaseResourceTest):
             filename, pdf = self.generator.generate_resource_pdf(task)
             print("ok")
 
-    def test_grid_resource_generation_missing_paper_size_parameter(self):
+    def test_job_badges_resource_generation_missing_paper_size_parameter(self):
         combination = {
-            "header_text": "",
+            "header_text": "Example header text",
             "copies": 1
         }
 
@@ -55,8 +55,8 @@ class GridResourceViewTest(BaseResourceTest):
         with self.assertRaises(TaskError):
             filename, pdf = self.generator.generate_resource_pdf(task)
 
-    def test_grid_resource_generation_missing_header_text_parameter(self):
-        expected_filename = "Grid (a4).pdf"
+    def test_job_badges_resource_generation_missing_header_text_parameter(self):
+        expected_filename = "Job Badges (a4).pdf"
         combination = {
             "paper_size": "a4",
             "copies": 1

@@ -30,11 +30,9 @@ Important files:
   |   └── shutdown-script.sh
   ├── static/
   ├── templates/
-  ├── .coveragerc
   ├── Dockerfile
   ├── Dockerfile-local
   ├── requirements.txt
-  └── setup.cfg
 
 
 - ``render/``: The python render service package.
@@ -48,17 +46,15 @@ Important files:
 - ``scripts/``: Bash shell scripts used in the creation of the render service.
 
   + ``docker-entrypoint.sh``: The entrypoint for the render service, creates multiple daemons and starts up the webservice.
-  + ``mount-bucket.sh``: Mounts the Google Cloud bucket using gfuze.
+  + ``mount-bucket.sh``: Mounts the Google Cloud bucket using `gcsfuse <https://cloud.google.com/storage/docs/gcs-fuse>`_.
   + ``pip-install.sh``: Installs a pip requirements file in a specific order.
   + ``shutdown-script.sh``: TODO: This is still to be used. A script which is run when the machine is pre-empted.
 
 - ``static/``: Locally stored static files, either kepted locally for speed or licence reasons (such as do not distribute).
 - ``templates/``: Jinja templates for webpages and render service.
-- ``.coveragerc``: Configuration for coverage reporting.
 - ``Dockerfile``: Dockerfile for building the service.
 - ``Dockerfile-local``: Dockerfile for building the service for local development.
 - ``requirements.txt``: Specifies required python modules needed to run the webservice.
-- ``setup.cfg``: Configuration file for style services such as flake8 and pydocstyle.
 
 Some important things to note when working with the render service:
 

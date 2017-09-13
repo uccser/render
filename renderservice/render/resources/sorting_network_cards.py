@@ -1,5 +1,6 @@
 """Module for generating Sorting Network Cards resource."""
 
+import os
 from random import sample
 from PIL import Image, ImageDraw, ImageFont
 
@@ -21,6 +22,7 @@ def resource(task, resource_manager):
 
     font_path = "fonts/PatrickHand-Regular.ttf"
     local_font_path = resource_manager.get_path(font_path)
+    font_size = 300
 
     # Retrieve parameters
     card_type = task["type"]
@@ -34,7 +36,7 @@ def resource(task, resource_manager):
         draw.line([(0, y_coord), (IMAGE_SIZE_X, y_coord)], fill=LINE_COLOUR, width=LINE_WIDTH)
 
     # Prepare text data
-     card_data_type = "text"
+    card_data_type = "text"
     if card_type == "small_numbers":
         font_size = 800
         text = ["1", "2", "3", "4", "5", "6"]
@@ -46,7 +48,8 @@ def resource(task, resource_manager):
             text.append("{:,}".format(number))
     elif card_type == "fractions":
         font_size = 900
-        font_path = "static/fonts/NotoSans-Regular.ttf"
+        font_path = "fonts/NotoSans-Regular.ttf"
+        local_font_path = resource_manager.get_path(font_path)
         text = [u"\u00bd", u"\u2153", u"\u2154", u"\u215c", u"\u00be", u"\u215d"]
     elif card_type == "maori_numbers":
         font_size = 300
@@ -88,7 +91,6 @@ def resource(task, resource_manager):
             "butterfly-story-butterfly.png",
         ]
 
-    font = ImageFont.truetype(local_font_path, font_size)
     card_centers = [
         (IMAGE_SIZE_X / 2, IMAGE_SIZE_Y / 4),
         (IMAGE_SIZE_X / 2, (IMAGE_SIZE_Y / 4) * 3),
@@ -124,6 +126,7 @@ def resource(task, resource_manager):
             if image_number % 2 == 1 and image_number != len(images) - 1:
                 pages.append({"type": "image", "data": page})
     else:
+        font = ImageFont.truetype(local_font_path, font_size)
         for (text_number, text_string) in enumerate(text):
             if text_number % 2 == 0:
                 page = card_outlines.copy()
