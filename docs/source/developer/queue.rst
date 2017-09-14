@@ -3,7 +3,7 @@ Queue Service
 
 The queue service is an image that is run during local development only, it provides a rough implementation of the Google TaskQueue RESTful API for access by the render service and external task producers.
 
-This should disappear with `Task Queue v2 <https://cloud.google.com/appengine/docs/standard/python/taskqueue/rest/migrating-from-restapi-v1>`_ assuming there is a good way to run it locally. 
+This should disappear with `Task Queue v2 <https://cloud.google.com/appengine/docs/standard/python/taskqueue/rest/migrating-from-restapi-v1>`_ assuming there is a good way to run it locally.
 
 Infrastructure
 ==============================================================================
@@ -19,6 +19,7 @@ Important files:
 
 .. code-block:: none
 
+  queueservice/
   ├── api_data/
   |   ├── __init__.py
   |   ├── taskqueue_v1beta2.py
@@ -33,7 +34,7 @@ Important files:
 - ``api_data/``: Contains pairs of API specifications and Python Implementation.
 
   + ``taskqueue_v1beta2.py``: The python implementation of the taskqueue api for version 1beta2.
-  + ``taskqueue_v1beta2.api``: Google API description of the taskqueue REST API from the Google Discovery Service. This file have been modified to remove authorization scoping.
+  + ``taskqueue_v1beta2.api``: Google API description of the taskqueue REST API from the Google Discovery Service. This file has been modified to remove authorization scoping.
 
 - ``Dockerfile``: Dockerfile for building the webservice.
 - ``gunicorn.conf.py``: Gunicorn configuration.

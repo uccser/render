@@ -48,7 +48,7 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
         logger.info("Daemon with pid {} running.".format(self.pid))
         while True:
             lease_secs = TASK_COUNT * TASK_SECONDS
-            tasks = queue.lease_tasks(tasks_to_fetch=TASK_COUNT, lease_secs=lease_secs, tag="generate")
+            tasks = queue.lease_tasks(tasks_to_fetch=TASK_COUNT, lease_secs=lease_secs, tag="task")
             self.process_tasks(tasks, queue)
             time.sleep(RENDER_SLEEP_TIME)
 
