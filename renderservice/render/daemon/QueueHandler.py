@@ -3,6 +3,7 @@ import json
 import logging
 import httplib2shim
 from apiclient.discovery import build, HttpError
+from oauth2client.service_account import ServiceAccountCredentials
 from base64 import b64encode, b64decode
 
 logger = logging.getLogger(__name__)
@@ -15,7 +16,10 @@ def authorize_session():
         Something in future!
     """
     pass  # TODO
-
+    # Should probably just use https://developers.google.com/identity/protocols/application-default-credentials
+    from oauth2client.client import GoogleCredentials
+    credentials = GoogleCredentials.get_application_default()
+    return credentials
 
 def encode_dictionary(dictionary):
     """Encode a dictionary into a base64 string.

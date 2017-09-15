@@ -1,10 +1,11 @@
 """Render Daemon for collecting and consuming render jobs."""
 import os
+import sys
 import time
-import pickle
 import signal
 import logging
-from base64 import b64encode
+from io import BytesIO
+from base64 import b64encode, b64decode
 from daemons.prefab.run import RunDaemon
 from render.daemon.QueueHandler import QueueHandler
 from render.daemon.ResourceGenerator import ResourceGenerator
@@ -20,8 +21,27 @@ TASK_TIME_MULT = float(os.getenv("TASK_TIME_MULT", 1.33))
 TASK_RETRY_LIMIT = int(os.getenv("TASK_RETRY_LIMIT", 5))
 
 RENDER_SLEEP_TIME = float(os.getenv("RENDER_SLEEP_TIME", 10))
+MAX_QUEUE_TASK_SIZE = int(os.getenv("MAX_QUEUE_TASK_SIZE", 680 * 1024))
+
+CLOUD_STORAGE_BUCKET_NAME = os.getenv("CLOUD_STORAGE_BUCKET_NAME", "cs-unplugged.appspot.com")
+BUCKET_SAVE_DIRECTORY = os.getenv("BUCKET_SAVE_DIRECTORY", "/static/resources")
 
 logger = logging.getLogger(__name__)
+
+
+def authenticate_storage():
+    """Authenticate into Google Cloud storage.
+
+    Returns:
+        An authenticate storage client.
+    """
+    from google.auth import compute_engine
+    from google.cloud import storage
+
+    credentials = compute_engine.Credentials()
+    storage_client = storage.Client(credentials=credentials, project=PROJECT_NAME)
+
+    return storage_client
 
 
 def handle_timelimit_exceeded():
@@ -93,8 +113,21 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
 
             # Save out documents
             if result is not None and result["kind"] == "result#document":
-                data = pickle.dumps(result)
-                self.file_manager.save(internal_filename, data)
+                if sys.getsizeof(result["document"]) < MAX_QUEUE_TASK_SIZE:
+                    pass
+                else:
+                    filename = result["filename"]
+                    document = result["document"]
+                    public_url = self.handle_document_saving(filename, document)
+                    link_result = {
+                        "kind": "result#link",
+                        "success": result["success"],
+                        "url": public_url
+                    }
+                    result = link_result
+
+                queue.create_task(task_payload=result, tag="result")
+
 
     def process_task(self, task_descriptor):
         """Process the given task and get result.
@@ -147,3 +180,21 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
                 "document": None
             }
         return result
+
+    def handle_document_saving(self, filename, document):
+        """Save a given document to the google cloud bucket.
+
+        Args:
+            filename: A string of the name to save the file as within
+                the bucket.
+            document: Bytes of the document to be saved.
+        Returns:
+            A public url to the document.
+        """
+        client = authenticate_storage()
+        bucket = client.get_bucket(CLOUD_STORAGE_BUCKET_NAME)
+        blob = bucket.blob(os.path.join(BUCKET_SAVE_DIRECTORY, filename))
+        blob.make_public()
+        file_stream = BytesIO(document)
+        blob.upload_from_file(file_stream)
+        return blob.public_url
