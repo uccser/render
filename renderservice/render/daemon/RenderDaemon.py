@@ -113,9 +113,7 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
 
             # Save out documents
             if result is not None and result["kind"] == "result#document":
-                if sys.getsizeof(result["document"]) < MAX_QUEUE_TASK_SIZE:
-                    pass
-                else:
+                if MAX_QUEUE_TASK_SIZE < sys.getsizeof(result["document"]):
                     filename = result["filename"]
                     document = result["document"]
                     public_url = self.handle_document_saving(filename, document)
