@@ -3,7 +3,7 @@ LABEL maintainer="csse-education-research@canterbury.ac.nz"
 
 # Arguments and Environment Variables
 ARG DEBIAN_FRONTEND=noninteractive
-ARG PROCESS_PORT=5000
+ARG PROCESS_PORT=5052
 ENV PORT ${PROCESS_PORT}
 
 # Install dependencies

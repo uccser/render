@@ -9,7 +9,7 @@ from api_data.taskqueue_v1beta2 import taskqueue_v1beta2_api
 # FLASK SETUP
 
 ADDRESS = os.getenv("ADDRESS", "localhost")
-PORT = int(os.getenv("PORT", 5000))
+PORT = int(os.getenv("PORT", 5052))
 application = Flask(__name__)
 application.register_blueprint(taskqueue_v1beta2_api, url_prefix="/taskqueue/v1beta2/projects")
 

@@ -4,7 +4,7 @@ import logging
 import importlib
 from io import BytesIO
 from PIL import Image
-from base64 import standard_b64encode
+from base64 import b64encode
 from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML, CSS
 from render.daemon.FileManager import FileManager
@@ -102,9 +102,9 @@ class ResourceGenerator(object):
         context["paper_size"] = task["paper_size"]
         context["url"] = task["url"]
 
-        context["resource_images"] = []
+        context["all_data"] = []
         for copy in range(0, task["copies"]):
-            context["resource_images"].append(
+            context["all_data"].append(
                 self.generate_resource(task, resource_generator)
             )
 
@@ -163,6 +163,6 @@ class ResourceGenerator(object):
                 image.save(image_buffer, format="PNG")
 
                 # Add base64 of image to list of images
-                data[index]["data"] = standard_b64encode(image_buffer.getvalue()).decode()
+                data[index]["data"] = b64encode(image_buffer.getvalue()).decode()
 
         return data

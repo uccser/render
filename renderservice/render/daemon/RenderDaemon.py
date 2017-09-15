@@ -16,7 +16,7 @@ QUEUE_NAME = os.getenv("QUEUE_NAME", None)
 DISCOVERY_URL = os.getenv("API_DISCOVERY_URL", None)
 
 TASK_COUNT = int(os.getenv("TASK_COUNT", 20))
-TASK_SECONDS = float(os.getenv("TASK_SECONDS", 15))
+TASK_SECONDS = float(os.getenv("TASK_SECONDS", 50))
 TASK_TIME_MULT = float(os.getenv("TASK_TIME_MULT", 1.33))
 TASK_RETRY_LIMIT = int(os.getenv("TASK_RETRY_LIMIT", 5))
 
@@ -104,13 +104,6 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
             else:
                 result = self.handle_retry_limit(task_descriptor)
 
-            # Task was successful or had too many failures
-            if result is not None:
-                queue.delete_task(task_id)
-            # Task failed and should be retried
-            else:
-                queue.update_task(task_id=task_id, new_lease_secs=1)
-
             # Save out documents
             if result is not None and result["kind"] == "result#document":
                 if MAX_QUEUE_TASK_SIZE < sys.getsizeof(result["document"]):
@@ -125,6 +118,13 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
                     result = link_result
 
                 queue.create_task(task_payload=result, tag="result")
+
+            # Task was successful or had too many failures
+            if result is not None:
+                queue.delete_task(task_id)
+            # Task failed and should be retried
+            else:
+                queue.update_task(task_id=task_id, new_lease_secs=1)
 
 
     def process_task(self, task_descriptor):
@@ -148,7 +148,7 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
                 "kind": "result#document",
                 "success": True,
                 "filename": filename,
-                "document": b64encode(document)
+                "document": b64encode(document).decode("ascii")
             }
         else:
             raise Exception("Unrecognized task: {}.".format(task_kind))
