@@ -1,6 +1,5 @@
 # You will need to install from the renderservice
 #   pip install -r requirements.txt
-#   pip install -e render
 
 import base64
 import importlib.machinery
