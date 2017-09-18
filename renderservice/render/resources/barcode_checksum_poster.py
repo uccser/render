@@ -13,10 +13,7 @@ def resource(task, resource_manager):
     Returns:
         A dictionary or list of dictionaries for each resource page.
     """
-    # Retrieve parameters
-    parameter_options = valid_options()
     barcode_length = task["barcode_length"]
-
     image_path = "img/resources/barcode-checksum-poster/{}-digits.png"
     data = resource_manager.load(image_path.format(barcode_length))
     image = Image.open(data)

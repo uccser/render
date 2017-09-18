@@ -25,7 +25,6 @@ def resource(task, resource_manager):
     local_font_path = resource_manager.get_path(FONT_PATH)
     font = ImageFont.truetype(local_font_path, 200)
 
-    parameter_options = valid_options()
     number_cards = int(task["number_cards"])
     max_number = task["max_number"]
     help_sheet = task["help_sheet"]

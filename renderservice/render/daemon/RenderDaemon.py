@@ -5,7 +5,7 @@ import time
 import signal
 import logging
 from io import BytesIO
-from base64 import b64encode, b64decode
+from base64 import b64encode
 from daemons.prefab.run import RunDaemon
 from render.daemon.QueueHandler import QueueHandler
 from render.daemon.ResourceGenerator import ResourceGenerator
@@ -93,7 +93,6 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
 
             result = None
             if retries < TASK_RETRY_LIMIT:
-                internal_filename = "{}.pickle".format(task_id)
                 signal.alarm(timeout_seconds)
                 try:
                     result = self.process_task(task_descriptor)

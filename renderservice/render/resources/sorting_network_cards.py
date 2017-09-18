@@ -148,7 +148,6 @@ def resource(task, resource_manager):
             if text_number % 2 == 1 and text_number != len(text) - 1:
                 pages.append({"type": "image", "data": page})
 
-
     pages.append({"type": "image", "data": page})
     return pages
 
