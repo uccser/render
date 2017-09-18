@@ -125,7 +125,6 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
             else:
                 queue.update_task(task_id=task_id, new_lease_secs=1)
 
-
     def process_task(self, task_descriptor):
         """Process the given task and get result.
 
