@@ -1,5 +1,8 @@
-# You will need to install from the renderservice
-#   pip install -r requirements.txt
+"""Allows access to queue in order to create tasks and get results.
+
+You will need to install from the renderservice
+  pip install -r requirements.txt
+"""
 
 import base64
 import importlib.machinery
@@ -13,6 +16,13 @@ DISCOVERY_URL = "http://localhost:5052/api/{api}/{apiVersion}"
 
 
 def action_add(queue):
+    """Add a render task to the given queue.
+
+    Please modify this as needed.
+
+    Args:
+        queue: QueueHandler to interact with.
+    """
     queue.create_task({
         "kind": "task#render",
         "resource_slug": "binary-cards",
@@ -28,6 +38,11 @@ def action_add(queue):
 
 
 def action_list(queue):
+    """List up to 100 tasks in the queue.
+
+    Args:
+        queue: QueueHandler to interact with.
+    """
     tasks = queue.list_tasks()
     print("Number of tasks: {}".format(len(tasks)))
     for task in tasks:
@@ -35,6 +50,11 @@ def action_list(queue):
 
 
 def action_lease(queue):
+    """Lease tasks tagged with task from the queue for 60 seconds.
+
+    Args:
+        queue: QueueHandler to interact with.
+    """
     tasks = queue.lease_tasks(tasks_to_fetch=100, lease_secs=60, tag="task")
     print("Number of tasks: {}".format(len(tasks)))
     for task in tasks:
@@ -42,6 +62,11 @@ def action_lease(queue):
 
 
 def action_document(queue):
+    """Save out document results from the queue.
+
+    Args:
+        queue: QueueHandler to interact with.
+    """
     tasks = queue.list_tasks()
     for task in tasks:
         if task["payload"]["kind"] == "result#document":
@@ -53,6 +78,11 @@ def action_document(queue):
 
 
 def action_flush(queue):
+    """Attempt to delete all tasks from the queue.
+
+    Args:
+        queue: QueueHandler to interact with.
+    """
     tasks = queue.list_tasks()
     while len(tasks) > 0:
         for task in tasks:
