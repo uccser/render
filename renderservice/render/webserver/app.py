@@ -58,6 +58,8 @@ def health_check():
     num_daemons = get_recommended_number_of_daemons()
     inactive_daemons = {i for i in range(1, num_daemons + 1)}
     daemons = get_active_daemon_details("render")
+
+    # Checks which daemons are running
     for info in daemons:
         if check_pid(info.pid):
             logger.info("Render daemon {} is running.".format(info.number))
@@ -66,8 +68,9 @@ def health_check():
             logger.info("Render daemon {} is not running.".format(info.number))
 
     if len(inactive_daemons) > 0:
-        logger.info("Attempting to restart render daemons {}.".format(inactive_daemons))
+        logger.info("Attempprocess_taskting to restart render daemons {}.".format(inactive_daemons))
 
+    # Attempt to restart missing daemons
     processes = []
     for daemon_number in inactive_daemons:
         args = ["/docker_venv/bin/python", "-m", "render.daemon",
@@ -79,6 +82,7 @@ def health_check():
                              stderr=subprocess.DEVNULL)
         processes.append((daemon_number, p, 0))
 
+    # Clean up processes created in creating daemons
     while len(processes) > 0:
         daemon_number, p, retries = processes.pop(0)
         returncode = None

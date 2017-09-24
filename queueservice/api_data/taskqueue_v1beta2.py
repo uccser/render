@@ -188,7 +188,7 @@ class Stats(object):
 
 
 class Acl(object):
-    """Describes the user writes over the associated object.
+    """Describes the user-rights over the associated object.
 
     TODO: We currently do not explicitly use the Acl object.
     """
