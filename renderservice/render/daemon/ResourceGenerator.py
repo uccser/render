@@ -125,11 +125,11 @@ class ResourceGenerator(object):
     def generate_resource(self, task, resource_generator):
         """Retrieve page(s) for one copy of resource from resource generator.
 
-        Images are resized to size.
+        Images are resized to fit page.
 
         Args:
             task: The specification of file to generate as a dictionary.
-            resource_image_generator: The file generation module.
+            resource_generator: The file generation module.
 
         Returns:
             List of Base64 strings of a generated resource images for one copy.

@@ -60,7 +60,8 @@ def get_recommended_number_of_daemons():
         with open('/proc/self/status') as f:
             m = re.search(r'(?m)^Cpus_allowed:\s*(.*)$', f.read())
         if m:
-            res = bin(int(m.group(1).replace(',', ''), 16)).count('1')
+            threads = int(m.group(1).replace(',', ''), 16)
+            res = bin(threads).count('1')
             if res > 0:
                 return res
     except IOError:

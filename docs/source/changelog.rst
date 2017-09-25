@@ -26,11 +26,6 @@ All notable changes to this project will be documented in this file.
 
 **Notable changes:**
 
-The first major step in releasing a open source version of CS Unplugged.
-While some existing content from the classic version of CS Unplugged have yet
-to be adapted into the new format and system, we are releasing this version as
-a sneak peek for teachers.
-
 Features:
 
 -

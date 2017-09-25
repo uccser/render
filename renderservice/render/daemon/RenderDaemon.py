@@ -81,9 +81,9 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
         Tasks will be run to recieve a result, saved if necessary
         then deleted. Tasks that return a none result or are
         interupted by an exception will not be deleted and have
-        their lease reduced for another daemon. Tasks that have
+        their lease cleared for another daemon. Tasks that have
         surpassed their retry limit will have a failure result
-        saved if necessary otherwise they will be deleted.
+        saved and be deleted.
 
         Args:
             tasks: A list of json task objects.
@@ -106,7 +106,7 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
             else:
                 result = self.handle_retry_limit(task_descriptor)
 
-            # Save out documents
+            # Save documents
             if result is not None and result["kind"] == "result#document":
                 if MAX_QUEUE_TASK_SIZE < sys.getsizeof(result["document"]):
                     filename = result["filename"]
