@@ -99,7 +99,7 @@ class ResourceGenerator(object):
         context = dict()
         context["resource_name"] = task["resource_name"]
         context["header_text"] = task.get("header_text", "")
-        context["paper_size"] = task["paper_size"]
+        context["paper_size"] = task["paper_size"].lower()
         context["url"] = task["url"]
 
         context["all_data"] = []
@@ -119,6 +119,7 @@ class ResourceGenerator(object):
         html = HTML(string=pdf_html, base_url=STATIC_DIRECTORY)
         css_data = self.file_manager.load(css_filename).read()
         css_string = css_data.decode("utf-8")
+        logger.info(css_string)
         base_css = CSS(string=css_string)
         return filename, html.write_pdf(stylesheets=[base_css])
 

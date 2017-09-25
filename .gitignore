@@ -99,3 +99,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# sass cache and maps
+.sass-cache
+*.css.map
