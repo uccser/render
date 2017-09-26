@@ -53,7 +53,8 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
     """A daemon that processes tasks related to the rendering pipeline.
 
     WARN: Be careful here you understand which task you are dealing
-    with, a google task or one of our tasks."""
+    with, a google task or one of our tasks.
+    """
 
     def __init__(self, *args, **kwargs):
         """Create a Render Daemon.
