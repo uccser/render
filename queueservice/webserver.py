@@ -40,7 +40,7 @@ def api(api=None, version=None):
         logging.exception(message)
         return message, 404
     elif not os.path.isfile(filepath):
-        message = "Server Error: API exists for {} (version {}) but is not file.".format(api, version)
+        message = "Server Error: API path exists for {} (version {}) but is not a file.".format(api, version)
         logging.exception(message)
         return message, 500
     with open(filepath, "r") as f:
