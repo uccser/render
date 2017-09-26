@@ -20,8 +20,6 @@ services:
         STATIC_DIRECTORY: /renderservice/static_mnt
     volumes:
       - ./static:/renderservice/static_mnt
-    ports:
-      - "5051:5051"
     depends_on:
       - queue
     network_mode: "host"
