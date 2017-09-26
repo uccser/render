@@ -5,10 +5,10 @@ def bool_to_yes_no(boolean):
     """Convert value to yes or no.
 
     Args:
-        boolean: Value to check.
+        boolean: Value to check. (bool)
 
     Returns:
-        "yes" if boolean is True, "no" if False.
+        "yes" if boolean is True, "no" if False. (string)
 
     Raises:
         ValueError if value isn't "yes" or "no".
@@ -24,11 +24,11 @@ def bool_to_yes_no_or_pass_thru(value):
     """Convert value if boolean to yes or no.
 
     Args:
-        value: Value to check.
+        value: Value to check. (string)
 
     Returns:
         "yes" if boolean is True, "no" if False,
-        otherwise the value is returned.
+        otherwise the value is returned. (bool)
 
     Raises:
         ValueError if value isn't "yes" or "no".

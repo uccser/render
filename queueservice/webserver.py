@@ -28,8 +28,8 @@ def api(api=None, version=None):
     requirements) of the original from the mimicked source.
 
     Args:
-        api: The string of the api to load.
-        version: The string of the version of the api to load.
+        api: The string of the api to load. (str)
+        version: The string of the version of the api to load. (str)
     Returns:
         A JSON object describing the API.
     """
@@ -58,7 +58,7 @@ def server_error(e):
     """Log and reports back information about internal errors.
 
     Args:
-        e: The exception which was raised.
+        e: The exception which was raised. (Exception)
     Returns:
         A string which describes the exception and the internal server
         error status code.

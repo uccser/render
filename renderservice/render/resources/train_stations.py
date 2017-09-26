@@ -7,8 +7,8 @@ def resource(task, resource_manager):
     """Create a image for Train Stations resource.
 
     Args:
-        task: Dicitionary of requested document options.
-        resource_manager: File loader for external resources.
+        task: Dicitionary of requested document options. (dict)
+        resource_manager: File loader for external resources. (FileManager)
 
     Returns:
         A dictionary or list of dictionaries for each resource page.
@@ -28,10 +28,10 @@ def subtitle(task):
     also on the resource image.
 
     Args:
-        task: Dicitionary of requested document.
+        task: Dicitionary of requested document. (dict)
 
     Returns:
-        Text for subtitle (str).
+        Text for subtitle. (str)
     """
     return "{} tracks - {}".format(
         task["tracks"],
@@ -45,7 +45,7 @@ def valid_options():
     This excludes the header text parameter.
 
     Returns:
-        All valid options (dict).
+        All valid options. (dict)
     """
     return {
         "tracks": ["circular", "twisted"],

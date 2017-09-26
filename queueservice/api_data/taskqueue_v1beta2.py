@@ -50,18 +50,18 @@ class Task(object):
         make a new object.
 
         Args:
-            queueName: A string of the name of the associated queue.
+            queueName: A string of the name of the associated queue. (str)
             payloadBase64: A string of the user-defined payload as a
-                string in base64.
+                string in base64. (base64 string)
             id: A string of the task id, if None is automatically
-                generated.
-            kind: A string of the kind of object.
+                generated. (str)
+            kind: A string of the kind of object. (str)
             enqueueTimestamp: A long integer of the timesince the epoch the
-                task was enqueued.
+                task was enqueued. (long)
             leaseTimestamp: A long integer of the time the task becomes
-                avaliable for leasing.
-            retry_count: The number of times a task was leased.
-            tag: The tag associated with the tag.
+                avaliable for leasing. (long)
+            retry_count: The number of times a task was leased. (int)
+            tag: The tag associated with the tag. (str)
         """
         self.queueName = queueName
         self.payloadBase64 = payloadBase64
@@ -108,7 +108,7 @@ class Task(object):
 
         Args:
             json: A dictionary where keys map to Task object
-                properties.
+                properties. (dict)
         Returns:
             The converted Task object.
         """
@@ -134,10 +134,10 @@ class Stats(object):
         """Create a new Stats object.
 
         Args:
-            leasedLastHour: The number of tasks leased in the last hour.
-            leasedLastMinute: The number of tasks leased in the last minute.
-            oldestTask: The age of the oldest task.
-            totalTasks: The number of the tasks in the queue.
+            leasedLastHour: The number of tasks leased in the last hour. (int)
+            leasedLastMinute: The number of tasks leased in the last minute. (int)
+            oldestTask: The age of the oldest task. (float)
+            totalTasks: The number of the tasks in the queue. (int)
         """
         self.leasedLastHour = leasedLastHour
         self.leasedLastMinute = leasedLastMinute
@@ -148,7 +148,7 @@ class Stats(object):
         """Convert the current object into a dictionary.
 
         Returns:
-            A dictionary of properties mapped to keys.
+            A dictionary of properties mapped to keys. (dict)
         """
         return {
             "leasedLastHour": self.leasedLastHour,
@@ -162,7 +162,7 @@ class Stats(object):
 
         Returns:
             A dictionary where the keys match the properties of the
-            object.
+            object. (dict)
         """
         return self._asdict()
 
@@ -175,9 +175,9 @@ class Stats(object):
 
         Args:
             json: A dictionary where keys map to Task object
-                properties.
+                properties. (dict)
         Returns:
-            The converted Stats object.
+            The converted Stats object. (class Stats)
         """
         keys = [
             "leasedLastHour", "leasedLastMinute", "oldestTask", "totalTasks"
@@ -197,9 +197,9 @@ class Acl(object):
         """Create a new Acl object.
 
         Args:
-            adminEmails: A list of administrator emails.
-            consumerEmails: A list of emails with access to read/delete.
-            producerEmails: A list of emails with access to write.
+            adminEmails: A list of administrator emails (list of strings).
+            consumerEmails: A list of emails with access to read/delete (list of strings).
+            producerEmails: A list of emails with access to write (list of strings).
         """
         self.adminEmails = adminEmails if adminEmails is not None else []
         self.consumerEmails = consumerEmails if consumerEmails is not None else []
@@ -209,7 +209,7 @@ class Acl(object):
         """Convert the current object into a dictionary.
 
         Returns:
-            A dictionary of properties mapped to keys.
+            A dictionary of properties mapped to keys (dict).
         """
         return {
             "adminEmails": self.adminEmails,
@@ -222,7 +222,7 @@ class Acl(object):
 
         Returns:
             A dictionary where the keys match the properties of the
-            object.
+            object. (dict)
         """
         return self._asdict()
 
@@ -235,9 +235,9 @@ class Acl(object):
 
         Args:
             json: A dictionary where keys map to Task object
-                properties.
+                properties. (dict)
         Returns:
-            The converted Acl object.
+            The converted Acl object. (class ACL)
         """
         keys = [
             "adminEmails", "consumerEmails", "producerEmails"
@@ -261,12 +261,12 @@ class TaskQueue(object):
 
         Args:
             id: The identifier of the taskqueue, if None is given a
-                identifier is generated.
-            kind: The kind of the taskqueue.
+                identifier is generated. (str)
+            kind: The kind of the taskqueue. (str)
             maxLeases: The max number of leases an item can take before
-                it is removed from the queue.
-            stats: An Stats object recording information on the queue.
-            acl: An Acl object of Authorised users of the queue.
+                it is removed from the queue. (int)
+            stats: An Stats object recording information on the queue. (class Stats)
+            acl: An Acl object of Authorised users of the queue. (class Acl)
         """
         self.id = id if id is not None else generate_id()
         self.kind = kind
@@ -278,7 +278,7 @@ class TaskQueue(object):
         """Convert the current object into a dictionary.
 
         Returns:
-            A dictionary of properties mapped to keys.
+            A dictionary of properties mapped to keys. (dict)
         """
         return {
             "id": self.id,
@@ -293,7 +293,7 @@ class TaskQueue(object):
 
         Returns:
             A dictionary where the keys match the properties of the
-            object.
+            object. (dict)
         """
         d = self._asdict()
         d["stats"] = self.stats.to_json()
@@ -309,9 +309,9 @@ class TaskQueue(object):
 
         Args:
             json: A dictionary where keys map to Task object
-                properties.
+                properties. (dict)
         Returns:
-            The converted TaskQueue object.
+            The converted TaskQueue object. (class TaskQueue)
         """
         keys = [
             "id", "kind", "maxLeases", "stats", "acl"
@@ -339,8 +339,8 @@ def taskqueue_api(project=None, taskqueue=None):
     are not tracked as they are not useful.
 
     Args:
-        project: A string of the project to work on.
-        taskqueue: A string of the affected taskqueue.
+        project: A string of the project to work on. (str)
+        taskqueue: A string of the affected taskqueue. (str)
 
     GET:
         List the details describing the task queue.
@@ -387,8 +387,8 @@ def tasks_api(project=None, taskqueue=None):
     """List items or Insert into a given queue.
 
     Args:
-        project: A string of the project to work on.
-        taskqueue: A string of the affected taskqueue.
+        project: A string of the project to work on. (str)
+        taskqueue: A string of the affected taskqueue. (str)
 
     GET:
         Lists all non-deleted Tasks in a TaskQueue, whether or not
@@ -470,8 +470,8 @@ def lease_api(project=None, taskqueue=None):
     """Lease items from the taskqueue.
 
     Args:
-        project: A string of the project to work on.
-        taskqueue: A string of the affected taskqueue.
+        project: A string of the project to work on. (str)
+        taskqueue: A string of the affected taskqueue. (str)
 
     POST:
         Acquires a lease on the topmost N unowned tasks in the
@@ -572,9 +572,9 @@ def task_api(project=None, taskqueue=None, task_id=None):
     """Get, Update, or Delete a task.
 
     Args:
-        project: A string of the project to work on.
-        taskqueue: A string of the affected taskqueue.
-        task_id: The id of the task to modify.
+        project: A string of the project to work on. (str)
+        taskqueue: A string of the affected taskqueue. (str)
+        task_id: The id of the task to modify. (str)
 
     GET:
         Gets the named task in a TaskQueue.

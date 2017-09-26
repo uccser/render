@@ -11,9 +11,9 @@ def check_pid(pid):
     """Check that process is still active.
 
     Args:
-        pid: The process id of the process.
+        pid: The process id of the process. (int)
     Returns:
-        True if the process exists and is active, False otherwise.
+        True if the process exists and is active, False otherwise. (bool)
     """
     try:
         os.kill(pid, 0)  # kill actually means send UNIX signal.
@@ -27,9 +27,9 @@ def get_active_daemon_details(daemon):
     """Get the pids of all render daemons.
 
     Args:
-        daemon: A string of the daemon type. E.g. render.
+        daemon: A string of the daemon type. E.g. render. (str)
     Returns:
-        An array of namedtuples containing daemon number to pid.
+        An array of namedtuples containing daemon number to pid. (list of namedtuples)
     """
     if not os.path.exists(PID_DIRECTORY):
         return []
@@ -53,7 +53,7 @@ def get_recommended_number_of_daemons():
     """Get the recommended number of daemons to run on system.
 
     Returns:
-        An integer of the number of daemons.
+        An integer of the number of daemons. (int)
     """
     try:
         m = None

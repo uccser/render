@@ -25,9 +25,9 @@ def encode_dictionary(dictionary):
     """Encode a dictionary into a base64 string.
 
     Args:
-        dictionary: A python dictionary to convert.
+        dictionary: A python dictionary to convert. (dict)
     Returns:
-        The encoded string.
+        The encoded string. (base64 string)
     """
     string = json.dumps(dictionary)
     encoded_string = b64encode(string.encode("ascii")).decode()
@@ -38,12 +38,12 @@ def decode_dictionary(encoded_string):
     """Decode a base64 string into a dictionary.
 
     Args:
-        encoded_string: A base64 string to decode.
+        encoded_string: A base64 string to decode. (base64 string)
     Returns:
-        A python dictionary deserialized from the string.
+        A python dictionary deserialized from the string. (dict)
     """
     string = b64decode(encoded_string).decode()
-    dictionary = json.loads(string)
+    dictionary = json.loads(str)
     return dictionary
 
 
@@ -54,8 +54,8 @@ class QueueHandler(object):
         """Create a new QueueHandler.
 
         Args:
-            project_name: The project the taskqueue belongs to.
-            taskqueue_name: The name of the taskqueue.
+            project_name: The project the taskqueue belongs to. (str)
+            taskqueue_name: The name of the taskqueue. (str)
         """
         self.project_name = project_name
         self.taskqueue_name = taskqueue_name
@@ -85,9 +85,9 @@ class QueueHandler(object):
 
         Args:
             is_write: A boolean determining if the name will be used
-                for a write operation.
+                for a write operation. (bool)
         Returns:
-            A string of the project name required for a task_api call.
+            A string of the project name required for a task_api call. (str)
         """
         if is_write:
             return "b~" + self.project_name
@@ -98,7 +98,7 @@ class QueueHandler(object):
 
         Returns:
             A list of Google Tasks as with the user defined
-            task (dictionary) under that 'payload' key.
+            task (dictionary) under that 'payload' key. (list of dicts)
         """
         try:
             tasks = []
@@ -123,10 +123,10 @@ class QueueHandler(object):
         """Create a new task and places it on the taskqueue.
 
         Args:
-            task_payload: A dicitonary describing the task.
-            tag: A tag attached to the task.
+            task_payload: A dictionary describing the task. (dict)
+            tag: A tag attached to the task. (str)
         Returns:
-            The task id of the created task, otherwise None if error.
+            The task id of the created task, otherwise None if error. (str)
         """
         try:
             task = {
@@ -152,12 +152,12 @@ class QueueHandler(object):
         """Lease tasks from the taskqueue.
 
         Args:
-            tasks_to_fetch: The number of tasks to fetch.
-            lease_secs: The number of seconds to lease for.
-            tag: the tag to restrict leasing too.
+            tasks_to_fetch: The number of tasks to fetch. (int)
+            lease_secs: The number of seconds to lease for. (int)
+            tag: the tag to restrict leasing too. (str)
         Returns:
             A list of Google Tasks as with the user defined
-            task (dictionary) under that 'payload' key.
+            task (dictionary) under that 'payload' key. (list of dicts)
         """
         try:
             tasks = []
@@ -186,12 +186,12 @@ class QueueHandler(object):
         """Update a task lease from the taskqueue.
 
         Args:
-            task_id: A string of the task_id.
+            task_id: A string of the task_id. (str)
             new_lease_secs: The number of seconds to update the lease
-                by.
+                by. (int)
         Returns:
             The updated Google Task as a dictionary, the payload is
-            untouched. If there is an error None is returned.
+            untouched. If there is an error None is returned. (dict)
         """
         try:
             task = {
@@ -214,9 +214,9 @@ class QueueHandler(object):
         """Delete a task from the taskqueue.
 
         Args:
-            task_id: A string of the task_id.
+            task_id: A string of the task_id. (str)
         Returns:
-            True if the delete was successful, False otherwise.
+            True if the delete was successful, False otherwise. (bool)
         """
         try:
             delete_request = self.task_api.tasks().delete(

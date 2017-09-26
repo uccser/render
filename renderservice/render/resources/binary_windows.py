@@ -8,8 +8,8 @@ def resource(task, resource_manager):
     """Create a image for Binary Windows resource.
 
     Args:
-        task: Dicitionary of requested document options.
-        resource_manager: File loader for external resources.
+        task: Dicitionary of requested document options. (dict)
+        resource_manager: File loader for external resources. (FileManager)
 
     Returns:
         A dictionary or list of dictionaries for each resource page.
@@ -48,9 +48,9 @@ def back_page(base_image_path, resource_manager, font, value_type):
     """Return a Pillow object of back page of Binary Windows.
 
     Args:
-        base_image_path: Base image path for finding images (str).
-        font: Pillow ImageFont for writing text (ImageFont).
-        value_type: Type of value representation used (str).
+        base_image_path: Base image path for finding images. (str)
+        font: Pillow ImageFont for writing text. (ImageFont)
+        value_type: Type of value representation used. (str)
 
     Returns:
         Pillow Image of back page (Image).
@@ -66,12 +66,12 @@ def add_dot_counts(image, starting_value, font):
     """Add dot count text onto image.
 
     Args:
-        image: The image to add text to (Pillow Image).
-        starting_value: Number on left window (int).
-        font: Font used for adding text (Pillow Font).
+        image: The image to add text to. (Pillow Image)
+        starting_value: Number on left window. (int)
+        font: Font used for adding text. (Pillow Font)
 
     Returns:
-        Pillow Image with text added (Pillow Image).
+        Pillow Image with text added. (Pillow Image)
     """
     value = starting_value
     draw = ImageDraw.Draw(image)
@@ -98,17 +98,17 @@ def add_digit_values(image, resource_manager, value_type, on, x_coord_start, x_c
     """Add binary values onto image.
 
     Args:
-        image: The image to add binary values to (Pillow Image).
+        image: The image to add binary values to. (Pillow Image)
         value_type: Either "binary" for 0's and 1's, or "lightbulb" for
-                    lit and unlit lightbulbs (str).
-        on: True if binary value is on/lit, otherwise False (bool).
-        x_coord_start: X co-ordinate starting value (int).
-        x_coord_increment: X co-ordinate increment value (int).
-        base_y_coord: Y co-ordinate value (int).
-        font: Font used for adding text (Pillow Font).
+                    lit and unlit lightbulbs. (str)
+        on: True if binary value is on/lit, otherwise False. (bool)
+        x_coord_start: X co-ordinate starting value. (int)
+        x_coord_increment: X co-ordinate increment value. (int)
+        base_y_coord: Y co-ordinate value. (int)
+        font: Font used for adding text. (Pillow Font)
 
     Returns:
-        Pillow Image with binary values (Pillow Image).
+        Pillow Image with binary values. (Pillow Image)
     """
     text_coord_x = x_coord_start
 
@@ -160,10 +160,10 @@ def subtitle(task):
     also on the resource image.
 
     Args:
-        task: Dicitionary of requested document.
+        task: Dicitionary of requested document. (dict)
 
     Returns:
-        text for subtitle (str).
+        text for subtitle. (str)
     """
     number_of_bits = task["number_bits"]
     value_type = task["value_type"]
@@ -188,7 +188,7 @@ def valid_options():
     This excludes the header text parameter.
 
     Returns:
-        All valid options (dict).
+        All valid options. (dict)
     """
     return {
         "number_bits": ["4", "8"],

@@ -23,7 +23,7 @@ class FileManager(object):
         """Create a resource manager.
 
         Args:
-            args: Directories to load files from.
+            args: Directories to load files from. (list of strings)
         """
         if len(args) == 0:
             raise Exception()  # TODO
@@ -36,9 +36,9 @@ class FileManager(object):
 
         Args:
             filepath: The name of the file including full path to the
-                file within the storage bucket.
+                file within the storage bucket. (str)
         Returns:
-            BytesIO stream of the file contents.
+            BytesIO stream of the file contents. (BytesIO)
         """
         path = self.get_path(filepath)
         data = None
@@ -54,9 +54,9 @@ class FileManager(object):
 
         Args:
             filepath: The name of the file including full path to the
-                file within the storage bucket.
+                file within the storage bucket. (str)
         Returns:
-            A string of the filepath.
+            A string of the filepath. (str)
         """
         for directory in self.directories:
             path = os.path.join(directory, filepath)
@@ -73,8 +73,8 @@ class FileManager(object):
 
         Args:
             filepath: The name of the file including full path to the
-                file within the storage bucket.
-            content: Bytes of the content to be saved to the file.
+                file within the storage bucket. (str)
+            content: Bytes of the content to be saved to the file. (bytes)
         """
         save_path = None
         if self.save_directory is None:

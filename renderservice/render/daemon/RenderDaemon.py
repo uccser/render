@@ -33,7 +33,7 @@ def authenticate_storage():
     """Authenticate into Google Cloud storage.
 
     Returns:
-        An authenticate storage client.
+        An authenticate storage client. (Client)
     """
     from google.auth import compute_engine
     from google.cloud import storage
@@ -86,8 +86,8 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
         saved and be deleted.
 
         Args:
-            tasks: A list of json task objects.
-            queue: QueueHandler to update and delete tasks from.
+            tasks: A list of json task objects. (list of dicts)
+            queue: QueueHandler to update and delete tasks from. (str)
         """
         for task_descriptor in tasks:
             task_id = task_descriptor["id"]
@@ -135,9 +135,9 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
 
         Args:
             task_descriptor: The queue task with the user
-                definied task as the payload.
+                definied task as the payload. (dict)
         Returns:
-            A dictionary of the result.
+            A dictionary of the result. (dict)
         """
         task = task_descriptor["payload"]
         task_kind = task["kind"]
@@ -163,9 +163,9 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
 
         Args:
             task_descriptor: The queue task with the user
-                definied task as the payload.
+                definied task as the payload. (dict)
         Returns:
-            A dictionary of the result.
+            A dictionary of the result. (dict)
         """
         task = task_descriptor["payload"]
         task_kind = task["kind"]
@@ -185,10 +185,10 @@ class RenderDaemon(RunDaemon, ResourceGenerator):
 
         Args:
             filename: A string of the name to save the file as within
-                the bucket.
-            document: Bytes of the document to be saved.
+                the bucket. (str)
+            document: Bytes of the document to be saved. (bytes)
         Returns:
-            A public url to the document.
+            A public url to the document. (str)
         """
         client = authenticate_storage()
         bucket = client.get_bucket(CLOUD_STORAGE_BUCKET_NAME)

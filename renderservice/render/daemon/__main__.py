@@ -32,7 +32,7 @@ def setup_logging(options):
     """Initialise the logging configuration.
 
     Args:
-        options: The program options.
+        options: The program options. (optparse options)
     """
     max_log_size = 100 * 1024 * 1024
     logs_directory = LOG_DIRECTORY
@@ -63,8 +63,8 @@ def render_daemon_control(daemon, action):
     killed.
 
     Args:
-        daemon: An integer representing the daemon number.
-        action: A string which is either 'start', 'stop', 'restart'
+        daemon: An integer representing the daemon number. (int)
+        action: A string which is either 'start', 'stop', 'restart' (str)
     """
     # Set-up directories
     pid_directory = PID_DIRECTORY

@@ -10,8 +10,8 @@ def resource(task, resource_manager):
     """Create a copy of the Searching Cards resource.
 
     Args:
-        task: Dicitionary of requested document options.
-        resource_manager: File loader for external resources.
+        task: Dicitionary of requested document options. (dict)
+        resource_manager: File loader for external resources. (FileManager)
 
     Returns:
         A dictionary or list of dictionaries for each resource page.
@@ -78,11 +78,11 @@ def create_help_sheet(numbers, range_text):
     """Create helper sheet for resource.
 
     Args:
-        numbers: Numbers used for activity (list).
-        range_text: String describing range of numbers (str).
+        numbers: Numbers used for activity. (list)
+        range_text: String describing range of numbers. (str)
 
     Returns:
-        Pillow image object (Image).
+        Pillow image object. (Image)
     """
     doc, tag, text, line = Doc().ttl()
     with tag("div"):
@@ -119,10 +119,10 @@ def subtitle(task):
     also on the resource image.
 
     Args:
-        task: Dicitionary of requested document.
+        task: Dicitionary of requested document. (dict)
 
     Returns:
-        text for subtitle (str).
+        text for subtitle. (str)
     """
     number_cards = task["number_cards"]
     max_number = task["max_number"]
@@ -150,7 +150,7 @@ def valid_options():
     This excludes the header text parameter.
 
     Returns:
-        All valid options (dict).
+        All valid options. (dict)
     """
     return {
         "number_cards": ["15", "31"],

@@ -7,8 +7,8 @@ def resource(task, resource_manager):
     """Create a copy of the Arrows resource.
 
     Args:
-        task: Dicitionary of requested document options.
-        resource_manager: File loader for external resources.
+        task: Dicitionary of requested document options. (dict)
+        resource_manager: File loader for external resources. (FileManager)
 
     Returns:
         A dictionary or list of dicitonaries for each resource page.
@@ -27,10 +27,10 @@ def subtitle(task):
     also on the resource image.
 
     Args:
-        task: Dicitionary of requested document.
+        task: Dicitionary of requested document. (dict)
 
     Returns:
-        Text for subtitle (str).
+        Text for subtitle. (str)
     """
     return task["paper_size"]
 
@@ -41,7 +41,7 @@ def valid_options():
     This excludes the header text parameter.
 
     Returns:
-        All valid options (dict).
+        All valid options. (dict)
     """
     return {
         "paper_size": ["a4", "letter"]

@@ -49,9 +49,9 @@ class ResourceGenerator(object):
         """Get the resource specification.
 
         Args:
-            resource_view: A string of the python filename.
+            resource_view: A string of the python filename. (str)
         Returns:
-            A python module.
+            A python module. (module)
         """
         if resource_view.endswith(".py"):
             resource_view = resource_view[:-3]
@@ -73,7 +73,7 @@ class ResourceGenerator(object):
                   - url
 
         Returns:
-            Tuple of filename and PDF file of generated resource.
+            Tuple of filename and PDF file of generated resource. (tuple)
         """
         if task.get("resource_slug", None) is None:
             raise TaskError("Task must specify the resource slug.")
@@ -129,11 +129,11 @@ class ResourceGenerator(object):
         Images are resized to fit page.
 
         Args:
-            task: The specification of file to generate as a dictionary.
-            resource_generator: The file generation module.
+            task: The specification of file to generate as a dictionary. (dict)
+            resource_generator: The file generation module. (module)
 
         Returns:
-            List of Base64 strings of a generated resource images for one copy.
+            List of Base64 strings of a generated resource images for one copy. (list of base64 strings)
         """
         # Get images from resource image creator
         data = resource_generator.resource(task, self.file_manager)
