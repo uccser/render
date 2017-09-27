@@ -8,7 +8,7 @@ from api_data.taskqueue_v1beta2 import taskqueue_v1beta2_api
 
 # FLASK SETUP
 
-ADDRESS = os.getenv("ADDRESS", "localhost")
+HOST = os.getenv("NETWORK_IPADDRESS", "localhost")
 PORT = int(os.getenv("PORT", 5052))
 application = Flask(__name__)
 application.register_blueprint(taskqueue_v1beta2_api, url_prefix="/taskqueue/v1beta2/projects")
@@ -40,14 +40,14 @@ def api(api=None, version=None):
         logging.exception(message)
         return message, 404
     elif not os.path.isfile(filepath):
-        message = "Server Error: API exists for {} (version {}) but is not file.".format(api, version)
+        message = "Server Error: API path exists for {} (version {}) but is not a file.".format(api, version)
         logging.exception(message)
         return message, 500
     with open(filepath, "r") as f:
         api_json = json.loads(f.read())
-        api_json["baseUrl"] = "http://{}:{}/{}/{}/projects/".format(ADDRESS, PORT, api, version)
+        api_json["baseUrl"] = "http://{}:{}/{}/{}/projects/".format(HOST, PORT, api, version)
         api_json["basePath"] = "/{}/{}/projects/".format(api, version)
-        api_json["rootUrl"] = "http://{}:{}/".format(ADDRESS, PORT)
+        api_json["rootUrl"] = "http://{}:{}/".format(HOST, PORT)
         api_json["servicePath"] = "{}/{}/projects/".format(api, version)
         content = json.dumps(api_json)
     return content

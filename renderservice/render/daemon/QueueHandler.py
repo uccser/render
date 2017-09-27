@@ -43,7 +43,7 @@ def decode_dictionary(encoded_string):
         A python dictionary deserialized from the string. (dict)
     """
     string = b64decode(encoded_string).decode()
-    dictionary = json.loads(str)
+    dictionary = json.loads(string)
     return dictionary
 
 

@@ -8,11 +8,11 @@ LABEL maintainer="csse-education-research@canterbury.ac.nz"
 # Set terminal to be noninteractive
 ARG DEBIAN_FRONTEND=noninteractive
 ARG PROCESS_PORT=8080
-ARG FLASK_PRODUCTION=1
+ARG FLASK_PRODUCTION=0
 ARG PROJECT_NAME=cs-unplugged
 ARG QUEUE_NAME=render-queue
 ARG API_DISCOVERY_URL
-ARG STATIC_DIRECTORY=/renderservice/static
+ARG STATIC_DIRECTORY=/renderservice/static_mnt
 
 ENV PORT ${PROCESS_PORT}
 ENV FLASK_PRODUCTION ${FLASK_PRODUCTION}
