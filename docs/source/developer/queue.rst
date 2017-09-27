@@ -3,7 +3,7 @@ Queue Service
 
 The queue service is an image that is run during local development only, it provides a rough implementation of the Google TaskQueue RESTful API for access by the render service and external task producers.
 
-This is just a placeholder and should disappear with `Task Queue v2 <https://cloud.google.com/appengine/docs/standard/python/taskqueue/rest/migrating-from-restapi-v1>`_ assuming there is a good way to run it locally.
+This is just a placeholder and should disappear with `Task Queue v2 <https://cloud.google.com/appengine/docs/standard/python/taskqueue/rest/migrating-from-restapi-v1>`_ assuming there is a suitable way to run it locally.
 
 Infrastructure
 ==============================================================================
@@ -13,23 +13,27 @@ When running locally using the docker-compose environment the Google Task Queue 
 Queue Service
 ------------------------------------------------------------------------------
 
-The Queue Sevice mimics the `Google Task Queue REST API <https://cloud.google.com/appengine/docs/standard/python/taskqueue/rest/>`_ allowing for a local task queue to be created using the Redis instance.
+The Queue Service mimics the `Google Task Queue REST API <https://cloud.google.com/appengine/docs/standard/python/taskqueue/rest/>`_ allowing for a local task queue to be created using the Redis instance.
 
 Important files:
 
 .. code-block:: none
 
-  queueservice/
-  ├── api_data/
-  |   ├── taskqueue_v1beta2.py
-  |   └── taskqueue_v1beta2.api
-  ├── Dockerfile-local
-  ├── gunicorn.conf.py
-  ├── requirements.txt
-  ├── webserver.py
-  └── wsgi.py
+  render
+  ├── dev/
+  │   └── queue_client.py
+  └──queueservice/
+      ├── api_data/
+      │   ├── taskqueue_v1beta2.py
+      │   └── taskqueue_v1beta2.api
+      ├── Dockerfile-local
+      ├── gunicorn.conf.py
+      ├── requirements.txt
+      ├── webserver.py
+      └── wsgi.py
 
 
+- ``queue_client.py``: A basic API for use in local development to interact with the Queue Service.
 - ``api_data/``: Contains pairs of API specifications and Python Implementation.
 
   - ``taskqueue_v1beta2.py``: The python implementation of the taskqueue api for version 1beta2.
@@ -47,7 +51,7 @@ Important files:
   - We do not expect this component to be changed much, and it is likely to be replaced in future by `Google Cloud Tasks <https://cloud.google.com/appengine/docs/flexible/python/migrating>`_.
   - It is not a one-to-one mapping of the Google Task Queue REST API as it does not include ``GET`` on a specific Task Queue.
   - Google error codes are not mimicked as they are undocumented, therefore the Queue Server may have more strict requirements on requests for safety but does not return error codes in the same format as Google.
-  - Each API call has been tested with the minimal set of body parameters for complience, but it is also possible that some requests that work locally may not work in production. ***may not work in production?***
+  - Each API call has been tested with the minimal set of body parameters for complience, but it is also possible that some requests that work locally may not work in production.
   - Complex requests should be `tested here <https://cloud.google.com/appengine/docs/standard/python/taskqueue/rest/tasks/insert#try-it>`_.
 
 Redis Instance
