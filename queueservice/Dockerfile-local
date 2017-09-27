@@ -17,4 +17,4 @@ WORKDIR /queue
 
 EXPOSE ${PORT}
 
-CMD /docker_venv/bin/gunicorn -c ./gunicorn.conf.py -b :${PORT} wsgi
+ENTRYPOINT ["/queue/docker-entrypoint.sh"]

@@ -10,9 +10,32 @@ import sys
 import os
 
 
+def get_queue_host():
+    """Get the IP Address of the queue host.
+
+    Using the command:
+        docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' render_queue_1
+
+    Returns:
+        A string of the IP address
+    """
+    import subprocess
+    command = [
+        'docker',
+        'inspect',
+        '-f',
+        '\'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\'',
+        'render_queue_1'
+    ]
+    result = subprocess.run(command, stdout=subprocess.PIPE)
+    return result.stdout.decode().strip('\n\'')
+
+
 PROJECT_NAME = "cs-unplugged-develop"
 QUEUE_NAME = "render-queue"
-DISCOVERY_URL = "http://localhost:5052/api/{api}/{apiVersion}"
+
+QUEUE_HOST = get_queue_host()
+DISCOVERY_URL = "http://{}:5052/api/{{api}}/{{apiVersion}}".format(QUEUE_HOST)
 
 
 def action_add(queue):

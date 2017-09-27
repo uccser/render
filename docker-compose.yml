@@ -16,13 +16,14 @@ services:
         FLASK_PRODUCTION: 0
         PROJECT_NAME: cs-unplugged-develop
         QUEUE_NAME: render-queue
-        API_DISCOVERY_URL: http://localhost:5052/api/{api}/{apiVersion}
+        API_DISCOVERY_URL: http://queue:5052/api/{api}/{apiVersion}
         STATIC_DIRECTORY: /renderservice/static_mnt
     volumes:
       - ./static:/renderservice/static_mnt
+    ports:
+      - "5051:5051"
     depends_on:
       - queue
-    network_mode: "host"
 
   queue:
     build:
