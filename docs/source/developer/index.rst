@@ -22,7 +22,7 @@ To avoid putting uneccessary load on the client, we do this using our "Render Se
 This system is split into two parts; the ``queueservice`` and the ``renderservice`` itself.
 
 The `queueservice` is essentially a temporary hack while we wait for the Google Task Queue v2 to be released, assuming it is suitable to run it localy.
-It is responsible for recieving tasks from the ***SOMETHING*** and sending them to the ``renderservice`` while developing locally.
+It is responsible for recieving tasks from a client and sending them to the ``renderservice`` while developing locally.
 
 The ``renderservice`` is the component that is actually responsible for generating resources based on tasks it recieves from the task queue.
 The ``renderserice`` also contains the resources used in the CS Unplugged project.
