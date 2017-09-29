@@ -1,0 +1,20 @@
+FROM uccser/python:3.6.2-stretch
+LABEL maintainer="csse-education-research@canterbury.ac.nz"
+
+# Arguments and Environment Variables
+ARG DEBIAN_FRONTEND=noninteractive
+ARG PROCESS_PORT=5052
+ENV PORT ${PROCESS_PORT}
+
+# Install dependencies
+COPY queueservice/requirements.txt /
+RUN /docker_venv/bin/pip3 install -r /requirements.txt
+
+# Setup Working Directory
+RUN mkdir /queue
+ADD ./queueservice /queue
+WORKDIR /queue
+
+EXPOSE ${PORT}
+
+ENTRYPOINT ["/queue/docker-entrypoint.sh"]

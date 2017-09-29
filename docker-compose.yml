@@ -1,0 +1,40 @@
+version: "3.2"
+services:
+
+  redis:
+    restart: always
+    image: redis
+    ports:
+      - "6379:6379"
+
+  render:
+    build:
+      context: .
+      dockerfile: ./renderservice/Dockerfile-local
+      args:
+        PROCESS_PORT: 5051
+        FLASK_PRODUCTION: 0
+        PROJECT_NAME: cs-unplugged-develop
+        QUEUE_NAME: render-queue
+        API_DISCOVERY_URL: http://queue:5052/api/{api}/{apiVersion}
+        STATIC_DIRECTORY: /renderservice/static_mnt
+    volumes:
+      - ./static:/renderservice/static_mnt
+    ports:
+      - "5051:5051"
+    depends_on:
+      - queue
+
+  queue:
+    build:
+      context: .
+      dockerfile: ./queueservice/Dockerfile-local
+      args:
+        PROCESS_PORT: 5052
+    ports:
+      - "5052:5052"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis

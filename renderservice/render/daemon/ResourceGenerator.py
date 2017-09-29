@@ -1,0 +1,169 @@
+"""Render Daemon for collecting and consuming render jobs."""
+import os
+import logging
+import importlib
+from io import BytesIO
+from PIL import Image
+from base64 import b64encode
+from jinja2 import Environment, FileSystemLoader
+from weasyprint import HTML, CSS
+from render.daemon.FileManager import FileManager
+
+# Daemon Setup and Task Management Constants
+STATIC_DIRECTORY = os.getenv("STATIC_DIRECTORY", "/renderservice/static_mnt")
+TEMPLATE_DIRECTORY = os.getenv("TEMPLATE_DIRECTORY", "/renderservice/templates")
+
+logger = logging.getLogger(__name__)
+
+# File Generation and Processing Constants
+MM_TO_PIXEL_RATIO = 6
+A4_MM_SCALE = 267
+LETTER_MM_SCALE = 249
+
+
+class TaskError(Exception):
+    """An error associated with a malformed task object."""
+
+    def __init__(self, *args, **kwargs):
+        """Create a TaskError."""
+        super(TaskError, self).__init__(*args, **kwargs)
+
+
+class ResourceGenerator(object):
+    """Turns a task into a pdf or image."""
+
+    def __init__(self, *args, **kwargs):
+        """Create a Render Daemon.
+
+        Assumes that any SIGALRM signals are sent by itself for
+        timeout exceptions.
+        """
+        super(ResourceGenerator, self).__init__(*args, **kwargs)
+        self.file_manager = FileManager("/renderservice/static", STATIC_DIRECTORY, save_directory=STATIC_DIRECTORY)
+        self.template_environment = Environment(
+            loader=FileSystemLoader(TEMPLATE_DIRECTORY),
+            autoescape=False
+        )
+
+    def import_resource_module(self, resource_view):
+        """Get the resource specification.
+
+        Args:
+            resource_view: A string of the python filename. (str)
+        Returns:
+            A python module. (module)
+        """
+        if resource_view.endswith(".py"):
+            resource_view = resource_view[:-3]
+        module_path = "render.resources.{}".format(resource_view)
+        return importlib.import_module(module_path)
+
+    def generate_resource_pdf(self, task):
+        """Return a response containing a generated PDF resource.
+
+        Args:
+            task: A dicitionary of values specifying the task.
+                Must have:
+                  - resource_slug
+                  - resource_name
+                  - resource_view
+                  - header_text (optional)
+                  - paper_size
+                  - copies
+                  - url
+
+        Returns:
+            Tuple of filename and PDF file of generated resource. (tuple)
+        """
+        if task.get("resource_slug", None) is None:
+            raise TaskError("Task must specify the resource slug.")
+        if task.get("resource_name", None) is None:
+            raise TaskError("Task must specify the resource name.")
+        if task.get("resource_view", None) is None:
+            raise TaskError("Task must specify the resource view.")
+        if task.get("paper_size", None) is None:
+            raise TaskError("Task must specify paper size.")
+        if task.get("copies", None) is None:
+            raise TaskError("Task must specify number of copies.")
+        if task.get("url", None) is None:
+            raise TaskError("Task must specify the url.")
+
+        resource_generator = self.import_resource_module(task["resource_view"])
+
+        for option, values in resource_generator.valid_options().items():
+            if option not in task.keys():
+                raise TaskError("Task is missing value for {}.".format(option))
+            if task[option] not in values:
+                raise TaskError("Value ({}) for option {} is not in: {}.".format(task[option], option, values))
+
+        context = dict()
+        context["resource_name"] = task["resource_name"]
+        context["header_text"] = task.get("header_text", "")
+        context["paper_size"] = task["paper_size"].lower()
+        context["url"] = task["url"]
+
+        context["all_data"] = []
+        for copy in range(0, task["copies"]):
+            context["all_data"].append(
+                self.generate_resource(task, resource_generator)
+            )
+
+        filename = "{} ({}).pdf".format(task["resource_name"], resource_generator.subtitle(task))
+        context["filename"] = filename
+
+        template_filename = task.get("template", "base-resource-pdf.html")
+        css_filename = task.get("css", "css/print-resource-pdf.css")
+
+        template = self.template_environment.get_template(template_filename)
+        pdf_html = template.render(context)  # TODO: Future consider async
+        html = HTML(string=pdf_html, base_url=STATIC_DIRECTORY)
+        css_data = self.file_manager.load(css_filename).read()
+        css_string = css_data.decode("utf-8")
+        logger.info(css_string)
+        base_css = CSS(string=css_string)
+        return filename, html.write_pdf(stylesheets=[base_css])
+
+    def generate_resource(self, task, resource_generator):
+        """Retrieve page(s) for one copy of resource from resource generator.
+
+        Images are resized to fit page.
+
+        Args:
+            task: The specification of file to generate as a dictionary. (dict)
+            resource_generator: The file generation module. (module)
+
+        Returns:
+            List of Base64 strings of a generated resource images for one copy. (list of base64 strings)
+        """
+        # Get images from resource image creator
+        data = resource_generator.resource(task, self.file_manager)
+        if not isinstance(data, list):
+            data = [data]
+
+        # Resize images to reduce file size
+        max_pixel_height = 0
+        if task["paper_size"].lower() == "a4":
+            max_pixel_height = A4_MM_SCALE * MM_TO_PIXEL_RATIO
+        elif task["paper_size"].lower() == "letter":
+            max_pixel_height = LETTER_MM_SCALE * MM_TO_PIXEL_RATIO
+        else:
+            raise TaskError("Unsupported paper size: {}.".format(task["paper_size"]))
+
+        for index in range(len(data)):
+            if data[index]["type"] == "image":
+                image = data[index]["data"]
+                width, height = image.size
+                if height > max_pixel_height:
+                    ratio = max_pixel_height / height
+                    width *= ratio
+                    height *= ratio
+                    image = image.resize((int(width), int(height)), Image.ANTIALIAS)
+
+                # Save image to buffer
+                image_buffer = BytesIO()
+                image.save(image_buffer, format="PNG")
+
+                # Add base64 of image to list of images
+                data[index]["data"] = b64encode(image_buffer.getvalue()).decode()
+
+        return data

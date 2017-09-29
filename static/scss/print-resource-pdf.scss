@@ -1,0 +1,47 @@
+// Bootstrap 4
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "bootstrap/custom";
+@import "weasyprint_bootstrap/reboot";
+@import "bootstrap/type";
+@import "weasyprint_bootstrap/text";
+@import "weasyprint_bootstrap/tables";
+
+// General
+footer {
+  bottom: 0;
+}
+header {
+  text-align: center;
+  width: 100%;
+  position: relative;;
+  height: 8mm;
+  margin-bottom: -8mm;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.8em;
+  color: #888;
+}
+.fixed-running-element{
+  text-align: center;
+  width: 100%;
+  position: fixed;
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.8em;
+  color: #888;
+  img {
+    max-height: 1.5em;
+    vertical-align: text-bottom;
+  }
+}
+div.page-break {
+  page-break-after: always;
+}
+
+// Image page
+div.resource-image-container {
+  text-align: center;
+}
+img.resource-image {
+  max-width: 100%;
+}

@@ -1,0 +1,49 @@
+# This Dockerfile is based off the Google App Engine Python runtime image
+# https://github.com/GoogleCloudPlatform/python-runtime
+FROM uccser/python:3.6.2-stretch-with-weasyprint
+
+# Add metadata to Docker image
+LABEL maintainer="csse-education-research@canterbury.ac.nz"
+
+# Set terminal to be noninteractive
+ARG DEBIAN_FRONTEND=noninteractive
+ARG PROCESS_PORT=8080
+ARG FLASK_PRODUCTION=0
+ARG PROJECT_NAME=cs-unplugged
+ARG QUEUE_NAME=render-queue
+ARG API_DISCOVERY_URL
+ARG STATIC_DIRECTORY=/renderservice/static_mnt
+
+ENV PORT ${PROCESS_PORT}
+ENV FLASK_PRODUCTION ${FLASK_PRODUCTION}
+ENV PROJECT_NAME ${PROJECT_NAME}
+ENV QUEUE_NAME ${QUEUE_NAME}
+ENV API_DISCOVERY_URL ${API_DISCOVERY_URL}
+ENV STATIC_DIRECTORY ${STATIC_DIRECTORY}
+
+# Set-up file system
+RUN mkdir /renderservice
+RUN mkdir /renderservice/scripts
+COPY ./renderservice/requirements.txt /renderservice
+
+# Install dependencies
+RUN /docker_venv/bin/pip3 install -r /renderservice/requirements.txt
+
+# Setup Working Directory
+ADD ./renderservice /renderservice
+WORKDIR /renderservice
+COPY .coveragerc /renderservice/
+
+# Setup User
+RUN useradd -c "RenderService user" -m -d /home/render -s /bin/bash render \
+    && chown -R render.render /renderservice \
+    && mkdir ${STATIC_DIRECTORY} \
+    && chown -R render.render ${STATIC_DIRECTORY}
+USER render
+ENV HOME /home/render
+
+EXPOSE ${PORT}
+
+# Run System
+RUN chmod +x /renderservice/scripts/docker-entrypoint.sh
+ENTRYPOINT ["/renderservice/scripts/docker-entrypoint.sh"]
