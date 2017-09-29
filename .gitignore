@@ -104,5 +104,7 @@ ENV/
 .sass-cache
 *.css.map
 
+# Authentication files
 bucket.json
 compute.json
+client.json
