@@ -23,7 +23,7 @@ TASK_RETRY_LIMIT = int(os.getenv("TASK_RETRY_LIMIT", 5))
 RENDER_SLEEP_TIME = float(os.getenv("RENDER_SLEEP_TIME", 10))
 MAX_QUEUE_TASK_SIZE = int(os.getenv("MAX_QUEUE_TASK_SIZE", 680 * 1024))
 
-CLOUD_STORAGE_BUCKET_NAME = os.getenv("CLOUD_STORAGE_BUCKET_NAME", "cs-unplugged.appspot.com")
+CLOUD_STORAGE_BUCKET_NAME = os.getenv("CLOUD_STORAGE_BUCKET_NAME", "cs-unplugged-ev.appspot.com")
 BUCKET_SAVE_DIRECTORY = os.getenv("BUCKET_SAVE_DIRECTORY", "/static/resources")
 
 logger = logging.getLogger(__name__)

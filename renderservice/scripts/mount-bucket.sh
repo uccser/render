@@ -6,7 +6,4 @@ if [ ! -d "${DIRECTORY}" ]; then
   mkdir ${DIRECTORY}
 fi
 
-gcsfuse ${BUCKET_NAME} ${DIRECTORY}
-
-# TODO:
-# - Ensure authorised
+gcsfuse --key-file ${GOOGLE_CLOUD_BUCKET_KEY} ${BUCKET_NAME} ${DIRECTORY}
