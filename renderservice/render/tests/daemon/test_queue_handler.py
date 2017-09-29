@@ -19,7 +19,7 @@ class QueueHandlerTest(BaseTest):
 
     def clear_queue(self):
         while len(self.queue) > 0:
-            tasks = self.queue.list_tasks()
+            tasks = self.queue.tasks()
             for task in tasks:
                 self.queue.delete_task(task["id"])
 
@@ -32,7 +32,7 @@ class QueueHandlerTest(BaseTest):
         self.queue.delete_task(task_id)
         self.assertEqual(len(self.queue), 0)
 
-    def test_list_tasks(self):
+    def test_tasks(self):
         num_tasks = 50
 
         task_ids = set()
@@ -42,7 +42,7 @@ class QueueHandlerTest(BaseTest):
 
         list_task_ids = set()
         list_task_payloads = set()
-        tasks = self.queue.list_tasks()
+        tasks = self.queue.tasks()
         for task in tasks:
             list_task_ids.add(task["id"])
             list_task_payloads.add(tuple(task["payload"].items()))
