@@ -103,3 +103,8 @@ ENV/
 # sass cache and maps
 .sass-cache
 *.css.map
+
+# Authentication files
+bucket.json
+compute.json
+client.json

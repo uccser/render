@@ -12,7 +12,7 @@ ARG FLASK_PRODUCTION=1
 ARG PROJECT_NAME=cs-unplugged
 ARG QUEUE_NAME=render-queue
 ARG API_DISCOVERY_URL
-ARG BUCKET_NAME=cs-unplugged-develop
+ARG BUCKET_NAME=cs-unplugged-dev.appspot.com
 ARG STATIC_DIRECTORY=/renderservice/static_mnt
 
 ENV PORT ${PROCESS_PORT}
@@ -21,10 +21,13 @@ ENV PROJECT_NAME ${PROJECT_NAME}
 ENV QUEUE_NAME ${QUEUE_NAME}
 ENV API_DISCOVERY_URL ${API_DISCOVERY_URL}
 ENV STATIC_DIRECTORY ${STATIC_DIRECTORY}
+ENV CLOUD_STORAGE_BUCKET_NAME ${BUCKET_NAME}
+ENV GOOGLE_CLOUD_BUCKET_KEY /keys/bucket.json
+ENV GOOGLE_APPLICATION_CREDENTIALS /keys/compute.json
 
 # Install GCSFUSE
 RUN apt-get update \
-    && apt-get install -y lsb-release \
+    && apt-get install -y lsb-release kmod \
     && export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s` \
     && echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | tee /etc/apt/sources.list.d/gcsfuse.list \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - \
@@ -36,7 +39,10 @@ RUN apt-get update \
 # Set-up file system
 RUN mkdir /renderservice
 RUN mkdir /renderservice/scripts
+RUN mkdir /keys
 COPY requirements.txt /renderservice
+COPY bucket.json /keys/bucket.json
+COPY compute.json /keys/compute.json
 
 # Install dependencies
 RUN /docker_venv/bin/pip3 install -r /renderservice/requirements.txt
@@ -47,9 +53,9 @@ WORKDIR /renderservice
 
 # Setup User
 RUN useradd -c "RenderService user" -m -d /home/render -s /bin/bash render \
-    && chown -R render.render /renderservice \
+    && chown -R render /renderservice \
     && mkdir ${STATIC_DIRECTORY} \
-    && chown -R render.render ${STATIC_DIRECTORY}
+    && chown -R render ${STATIC_DIRECTORY}
 USER render
 ENV HOME /home/render
 
